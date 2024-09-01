@@ -1,0 +1,16 @@
+package br.com.sistema.controle.financas.pessoais.utils.validacoes;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class ValidarNome {
+
+    public static boolean validarNomeCliente(String nome) {
+        String padrao = "^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]{2,100}$";
+
+        Pattern pattern = Pattern.compile(padrao);
+        Matcher matcher = pattern.matcher(nome);
+
+        return matcher.matches();
+    }
+}

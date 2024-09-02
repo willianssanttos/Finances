@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class ValidarNome {
 
-    public static boolean validarNomeCliente(String nome) {
+    public static boolean validarNome(String nome) {
         String padrao = "^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]{2,100}$";
 
         Pattern pattern = Pattern.compile(padrao);

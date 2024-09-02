@@ -1,4 +1,4 @@
-package br.com.sistema.controle.financas.pessoais.model;
+package br.com.sistema.controle.financas.pessoais.model.usuario;
 
 public class UsuarioEntity {
 
@@ -39,12 +39,4 @@ public class UsuarioEntity {
         this.numeroCelular = numeroCelular;
     }
 
-    @Override
-    public String toString(){
-        return
-                "NOME: " + nomeUsuario + "\n" +
-                "EMAIL: " + emailUsuario + "\n" +
-                "SENHA: " + senhaUsuario + "\n " +
-                "CELULAR: " + numeroCelular + "\n";
-    }
 }

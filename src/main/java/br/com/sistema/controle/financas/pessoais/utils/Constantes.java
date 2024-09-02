@@ -22,6 +22,14 @@ public class Constantes {
 
     public static final String EmailJaCadastrado = "Esse e-mail, já foi cadastrado!";
 
+    public static final String ErroCadastroConta = "Erro! Adicionar conta!";
+
+
+///Login ////
+
+    public static final String loginConta = "Login realizado com sucesso!";
+
+    public static final String erroLoginConta = "Usuário ou senha incorretos!";
 
 
     public static final String statusCliente = "Preencha os campos abaixo para verificar o status da conta";
@@ -32,14 +40,20 @@ public class Constantes {
 
     public static final String clienteSenha = "Digite a Senha";
 
-    ////// cadastro de produto //////
+    ////// cadastro da conta //////
 
-    public static final String cadastroProdutoNome = "Insira o nome do produto";
+    public static final String cadastroNomeConta = "Insira o nome da conta";
+
+    public static final String cadastroTipoConta = "Tipo contas invalido! Valores permitidos: CONTA CORRENTE\", \"CONTA POUPANÇA\", \"CARTÃO DE CRÉDITO, \"INVESTIMENTO, \"BENEFÍCIOS, \"OUTROS";
+
+    public static final String cadastroSaldo = "O valor invalido!";
+
+    public static final String cadastroConta = "Conta adicionada com sucesso!";
     public static final String cadastroProdutoCodigo = "Insira o codigo do produto";
 
     public static final String cadastroProdutoDescricao = "Insira a descrição do produto";
 
-    public static final String cadastroProdutoValor = "Insira o valor do produto";
+
 
     public static final String cadastroProdutoEstoque = "Insira o valor de estoque do produto";
 

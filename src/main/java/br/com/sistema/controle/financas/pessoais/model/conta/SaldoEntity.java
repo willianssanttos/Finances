@@ -1,7 +1,6 @@
 package br.com.sistema.controle.financas.pessoais.model.conta;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 public class SaldoEntity {
 

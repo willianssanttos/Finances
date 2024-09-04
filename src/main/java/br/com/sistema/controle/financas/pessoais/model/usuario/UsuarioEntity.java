@@ -1,19 +1,13 @@
 package br.com.sistema.controle.financas.pessoais.model.usuario;
 
-public class UsuarioEntity {
+import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;
 
-     private Integer idUsuario;
+public class UsuarioEntity extends SaldoEntity {
+
     private String nomeUsuario;
     private String emailUsuario;
     private String senhaUsuario;
     private String numeroCelular;
-
-    public Integer getIdUsuario() {
-        return idUsuario;
-    }
-    public void setIdUsuario(Integer idUsuario) {
-        this.idUsuario = idUsuario;
-    }
 
     public String getNomeUsuario() {
         return nomeUsuario;

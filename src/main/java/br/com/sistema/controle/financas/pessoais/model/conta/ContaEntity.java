@@ -2,10 +2,9 @@ package br.com.sistema.controle.financas.pessoais.model.conta;
 
 import java.sql.Timestamp;
 
-public class ContaEntity {
+public class ContaEntity extends SaldoEntity{
 
     private Integer idConta;
-    private Integer idUsuario;
     private Integer idSaldo;
     private String nomeConta;
     private Double saldoConta;
@@ -18,14 +17,6 @@ public class ContaEntity {
 
     public void setIdConta(Integer idConta) {
         this.idConta = idConta;
-    }
-
-    public Integer getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(Integer idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public Integer getIdSaldo() {

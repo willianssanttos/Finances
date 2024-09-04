@@ -20,7 +20,11 @@ public class UsuarioDao {
             ps.setString(3, usuario.getSenhaUsuario());
             ps.setString(4, usuario.getNumeroCelular());
 
-            ps.execute();
+           ResultSet rs = ps.executeQuery();
+           if (rs.next()){
+               int idUsuario = rs.getInt(1);
+               usuario.setIdUsuario(idUsuario);
+           }
 
         } catch (SQLException e){
             e.printStackTrace();

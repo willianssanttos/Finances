@@ -7,7 +7,7 @@ import java.sql.*;
 public class SaldoDao {
 
     public int inserirSaldo(int idUsuario, double saldoAtual, Timestamp dataAtualizacao){
-        String sql = "SElECT inserir_saldo(?,?,?,?)";
+        String sql = "SElECT inserir_saldo(?,?,?)";
 
         int idSaldo = -1;
         try (Connection conn = DataSourceConfig.getConexao();

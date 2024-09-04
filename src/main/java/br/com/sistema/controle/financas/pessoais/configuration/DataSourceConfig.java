@@ -1,22 +1,23 @@
 package br.com.sistema.controle.financas.pessoais.configuration;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
-import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DataSourceConfig {
 
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/ControleFinanceiro");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("123456");
-        return dataSource;
-    }
+    private static final String url = "jdbc:postgresql://localhost:5432/ControleFinanceiro";
+    private static final String user = "postgres";
+    private static final String password = "123456";
 
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
+    public static Connection getConexao(){
+        try {
+            return
+             DriverManager.getConnection(url, user, password);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

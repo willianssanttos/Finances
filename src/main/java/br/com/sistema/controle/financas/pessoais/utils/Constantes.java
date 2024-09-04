@@ -34,6 +34,10 @@ public class Constantes {
 
     public static final String statusCliente = "Preencha os campos abaixo para verificar o status da conta";
 
+    public static final String tipoTransacao = "Tipo transação invalido! Valores permitidos. Use 1 para entrada e 2 para saida!";
+
+    public static final String cadastroTransacao = "Transação registrada com sucesso!";
+
 
     ///status da conta////
     public static final String clienteEmail = "Digite o E-MAIL";

@@ -1,11 +1,11 @@
 package br.com.sistema.controle.financas.pessoais;
 
-import br.com.sistema.controle.financas.pessoais.configuration.DataSourceConfig;
-import br.com.sistema.controle.financas.pessoais.dao.conta.ContaDao;
-import br.com.sistema.controle.financas.pessoais.dao.usuario.UsuarioDao;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
+import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
 import br.com.sistema.controle.financas.pessoais.service.conta.ContaService;
+import br.com.sistema.controle.financas.pessoais.service.conta.SaldoService;
+import br.com.sistema.controle.financas.pessoais.service.conta.TransacaoService;
 import br.com.sistema.controle.financas.pessoais.service.usuario.UsuarioService;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
 import br.com.sistema.controle.financas.pessoais.utils.FuncoesUtil;
@@ -15,16 +15,19 @@ import br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarNumeroC
 import br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarSenha;
 import static br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarNumeroCelular.formatarNumeroCelular;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 
 
 public class Main {
-    static DataSourceConfig config = new DataSourceConfig();
-    static UsuarioDao usuarioDao = new UsuarioDao(config.jdbcTemplate(config.dataSource()));
-    static UsuarioService usuarioService = new UsuarioService(usuarioDao);
-    static ContaDao contaDao = new ContaDao(config.jdbcTemplate(config.dataSource()));
-    static ContaService contaService = new ContaService(contaDao);
+
+    static UsuarioService usuarioService = new UsuarioService();
+    static ContaService contaService = new ContaService();
+    static SaldoService saldoService = new SaldoService();
+    static TransacaoService transacaoService = new TransacaoService();
+
 
     public static void main(String[] args) {
 
@@ -60,6 +63,66 @@ public class Main {
         }
     }
 
+    public static void realizarLogin(Scanner input){
+
+        System.out.println("----LOGIN---\n");
+        System.out.println("Digite o E-MAIL: ");
+        String email = input.nextLine();
+
+        System.out.println("Digite a Senha: ");
+        String senha = input.nextLine();
+
+        Integer idUsuario = usuarioService.obterIdUsuarioPorEmail(email);
+
+        if (idUsuario == null){
+            System.err.println(Constantes.erroLoginConta);
+            return;
+        }
+
+        System.out.println(Constantes.loginConta);
+
+        usuarioLogado(input, idUsuario);
+    }
+
+    public static void usuarioLogado(Scanner input, Integer idUsuario) {
+        while (true) {
+            SaldoEntity saldo = new SaldoEntity();
+            saldo.setIdUsuario(idUsuario);
+
+            List<ContaEntity> contaUsuario = contaService.obterContasPorUsuario(saldo.getIdUsuario());
+
+            for (ContaEntity conta : contaUsuario){
+                Double saldoAtual = Double.valueOf(contaService.obterSaldo(saldo.getIdSaldo()));
+                System.out.println("SALDO R$: " + saldoAtual);
+            }
+
+            System.out.println("(1) Adicionar conta");
+            System.out.println("Escolha a opção desejada: ");
+            System.out.println("(2) Realizar Transação");
+            System.out.println("Escolha a opção desejada: ");
+
+            String logadoUsuario = input.nextLine();
+            if (!FuncoesUtil.ehNumero(logadoUsuario)) {
+                System.err.println(Constantes.OpcaoInvalida);
+                continue;
+            }
+            int Usuario = Integer.parseInt(logadoUsuario);
+
+            switch (Usuario) {
+                case 1:
+                    cadastrarConta(input, Usuario);
+                    break;
+                case 2:
+                    registrarTransacao(input,Usuario);
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println(Constantes.OpcaoInvalida);
+            }
+        }
+    }
+
     public static void cadastrarNovoUsuario(Scanner input) {
         UsuarioEntity novoUsuario = new UsuarioEntity();
 
@@ -84,7 +147,8 @@ public class Main {
                 continue;
             }
 
-            if (usuarioDao.verificarEmailExistente(emailUsuario)) {
+            Boolean emailExiste = usuarioService.emailExiste(emailUsuario);
+            if (emailExiste == true) {
                 System.err.println(Constantes.EmailJaCadastrado);
                 continue;
             }
@@ -159,52 +223,6 @@ public class Main {
         }
     }
 
-    public static void usuarioLogado(Scanner input) {
-        while (true) {
-
-            System.out.println("(1) Adicionar conta");
-            System.out.println("Escolha a opção desejada: ");
-
-            String logadoUsuario = input.nextLine();
-            if (!FuncoesUtil.ehNumero(logadoUsuario)) {
-                System.err.println(Constantes.OpcaoInvalida);
-                continue;
-            }
-            int Usuario = Integer.parseInt(logadoUsuario);
-
-            switch (Usuario) {
-                case 1:
-                    realizarLogin(input);
-                    break;
-                case 2:
-                    return;
-                default:
-                    System.out.println(Constantes.OpcaoInvalida);
-            }
-        }
-    }
-
-    public static void realizarLogin(Scanner input){
-
-        System.out.println("----LOGIN---\n");
-        System.out.println("Digite o E-MAIL: ");
-        String email = input.nextLine();
-
-        System.out.println("Digite a Senha: ");
-        String senha = input.nextLine();
-
-        Integer idUsuario = usuarioService.obterIdUsuarioPorEmail(email);
-
-        if (idUsuario == null){
-            System.err.println(Constantes.erroLoginConta);
-            return;
-        }
-
-        System.out.println(Constantes.loginConta);
-
-        cadastrarConta(input, idUsuario);
-    }
-
     public static void cadastrarConta(Scanner input, Integer idUsuario) {
         ContaEntity novaConta = new ContaEntity();
 
@@ -245,7 +263,7 @@ public class Main {
         } while (true);
 
         novaConta.setIdUsuario(idUsuario);
-        novaConta.setDataDeposito(LocalDateTime.now());
+        novaConta.setDataDeposito(Timestamp.valueOf(LocalDateTime.now()));
 
         if (contaService.criarConta(novaConta) == null){
             System.err.println(Constantes.ErroCadastroConta);
@@ -254,4 +272,27 @@ public class Main {
 
     }
 
+//    private static void mostrarDadosConta(SaldoEntity saldo){
+//       List<ContaEntity> contaUsuario = contaService.obterContasPorUsuario(saldo.getIdUsuario());
+//
+//        for (ContaEntity conta : contaUsuario){
+//            Double saldoAtual = Double.valueOf(saldoService.obterSaldo(conta.getIdConta()));
+//            System.out.println("SALDO R$: " + saldoAtual);
+//        }
+//    }
+
+    public static void registrarTransacao(Scanner input, Integer idConta) {
+        System.out.println("Digite a descrição da transação:");
+        String descricao = input.nextLine();
+
+        System.out.println("Digite o valor da transação:");
+        Double valor = Double.parseDouble(input.nextLine());
+
+        System.out.println("Digite o tipo de transação (1 para entrada, 2 para saída):");
+        int tipo = Integer.parseInt(input.nextLine());
+
+        transacaoService.registrarTransacao(idConta, descricao, valor, tipo);
+
+        System.out.println(Constantes.cadastroTransacao);
+    }
 }

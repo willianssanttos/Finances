@@ -9,16 +9,11 @@ public class UsuarioService {
 
     private UsuarioDao usuarioDao;
 
-    public UsuarioService(UsuarioDao usuarioDao){
-        this.usuarioDao = usuarioDao;
+    public UsuarioService(){
+        this.usuarioDao =  new UsuarioDao();
     }
 
     public UsuarioEntity criarUsuario(UsuarioEntity usuario) {
-
-        Boolean emailExiste = usuarioDao.verificarEmailExistente(usuario.getEmailUsuario());
-        if(emailExiste != null && emailExiste){
-            System.err.println(Constantes.EmailJaCadastrado);
-        }
 
         usuario.getNomeUsuario();
         usuario.getEmailUsuario();
@@ -29,6 +24,9 @@ public class UsuarioService {
 
     }
 
+    public Boolean emailExiste(String email){
+        return usuarioDao.verificarEmailExistente(email);
+    }
     public Integer obterIdUsuarioPorEmail(String email){
         return usuarioDao.obterIdUsuarioPorEmail(email);
     }

@@ -1,4 +1,4 @@
-package br.com.sistema.controle.financas.pessoais;
+package br.com.sistema.controle.financas.pessoais.controller;
 
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;
@@ -25,7 +25,6 @@ public class Main {
 
     static UsuarioService usuarioService = new UsuarioService();
     static ContaService contaService = new ContaService();
-    static SaldoService saldoService = new SaldoService();
     static TransacaoService transacaoService = new TransacaoService();
 
 
@@ -86,15 +85,9 @@ public class Main {
 
     public static void usuarioLogado(Scanner input, Integer idUsuario) {
         while (true) {
-            SaldoEntity saldo = new SaldoEntity();
-            saldo.setIdUsuario(idUsuario);
 
-            List<ContaEntity> contaUsuario = contaService.obterContasPorUsuario(saldo.getIdUsuario());
-
-            for (ContaEntity conta : contaUsuario){
-                Double saldoAtual = Double.valueOf(contaService.obterSaldo(saldo.getIdSaldo()));
-                System.out.println("SALDO R$: " + saldoAtual);
-            }
+            Double saldoAtual = contaService.obterSaldo(idUsuario);
+            System.out.println("SALDO R$: " + saldoAtual);
 
             System.out.println("(1) Adicionar conta");
             System.out.println("Escolha a opção desejada: ");
@@ -110,7 +103,7 @@ public class Main {
 
             switch (Usuario) {
                 case 1:
-                    cadastrarConta(input, Usuario);
+                    cadastrarConta(input, Usuario, idUsuario);
                     break;
                 case 2:
                     registrarTransacao(input,Usuario);
@@ -223,7 +216,7 @@ public class Main {
         }
     }
 
-    public static void cadastrarConta(Scanner input, Integer idUsuario) {
+    public static void cadastrarConta(Scanner input, Integer idUsuario, Integer idSaldo) {
         ContaEntity novaConta = new ContaEntity();
 
         do {
@@ -263,6 +256,7 @@ public class Main {
         } while (true);
 
         novaConta.setIdUsuario(idUsuario);
+        novaConta.setIdSaldo(idSaldo);
         novaConta.setDataDeposito(Timestamp.valueOf(LocalDateTime.now()));
 
         if (contaService.criarConta(novaConta) == null){
@@ -271,15 +265,6 @@ public class Main {
         System.out.println(Constantes.cadastroConta);
 
     }
-
-//    private static void mostrarDadosConta(SaldoEntity saldo){
-//       List<ContaEntity> contaUsuario = contaService.obterContasPorUsuario(saldo.getIdUsuario());
-//
-//        for (ContaEntity conta : contaUsuario){
-//            Double saldoAtual = Double.valueOf(saldoService.obterSaldo(conta.getIdConta()));
-//            System.out.println("SALDO R$: " + saldoAtual);
-//        }
-//    }
 
     public static void registrarTransacao(Scanner input, Integer idConta) {
         System.out.println("Digite a descrição da transação:");
@@ -291,7 +276,7 @@ public class Main {
         System.out.println("Digite o tipo de transação (1 para entrada, 2 para saída):");
         int tipo = Integer.parseInt(input.nextLine());
 
-        transacaoService.registrarTransacao(idConta, descricao, valor, tipo);
+        transacaoService.registrarTransacao(idConta, idConta, descricao, valor, tipo);
 
         System.out.println(Constantes.cadastroTransacao);
     }

@@ -10,7 +10,7 @@ import java.util.List;
 public class ContaDao {
 
     public ContaEntity criarConta(ContaEntity conta){
-        String sql = "SElECT inserir_conta(?,?,?,?,?)";
+        String sql = "SElECT inserir_conta(?,?,?,?,?,?)";
 
         try (Connection conn = DataSourceConfig.getConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {

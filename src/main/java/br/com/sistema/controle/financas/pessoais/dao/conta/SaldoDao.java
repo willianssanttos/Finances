@@ -1,51 +1,52 @@
 package br.com.sistema.controle.financas.pessoais.dao.conta;
 
 import br.com.sistema.controle.financas.pessoais.configuration.DataSourceConfig;
+import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;
 
 import java.sql.*;
 
 public class SaldoDao {
 
-    public int inserirSaldo(int idUsuario, double saldoAtual, Timestamp dataAtualizacao){
+    public SaldoEntity inserirSaldo(SaldoEntity saldo){
         String sql = "SElECT inserir_saldo(?,?,?)";
 
-        int idSaldo = -1;
         try (Connection conn = DataSourceConfig.getConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, idUsuario);
-            ps.setDouble(2, saldoAtual);
-            ps.setTimestamp(3, dataAtualizacao);
+            ps.setInt(1, saldo.getIdUsuario());
+            ps.setDouble(2, saldo.getSaldoAtual());
+            ps.setTimestamp(3, saldo.getDataAtualizadaSaldo());
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
-                idSaldo = rs.getInt(1);
+                int idSaldo = rs.getInt(1);
+                saldo.setIdSaldo(idSaldo);
             }
-            rs.close();
 
         } catch (SQLException e){
             e.printStackTrace();
         }
-        return idSaldo;
+        return saldo;
     }
 
-    public Integer obterSaldoPorIdConta(Integer idConta) {
-        String sql = "SELECT obter_saldo(?)";
+    public Double obterSaldoPorIdUsuario(Integer idUsuario) {
+        String sql = "SELECT obter_saldo_total(?)";
 
+        Double saldoTotal = 0.0;
         try (Connection conn = DataSourceConfig.getConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, idConta);
+            ps.setInt(1, idUsuario);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                idConta = rs.getInt(1);
+            if (rs.next()){
+                saldoTotal = rs.getDouble(1);
             }
             rs.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return idConta;
+        return saldoTotal;
     }
 }

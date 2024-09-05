@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 public class ContaEntity extends SaldoEntity{
 
     private Integer idConta;
-    private Integer idSaldo;
     private String nomeConta;
     private Double saldoConta;
     private String tipoConta;
@@ -19,13 +18,6 @@ public class ContaEntity extends SaldoEntity{
         this.idConta = idConta;
     }
 
-    public Integer getIdSaldo() {
-        return idSaldo;
-    }
-
-    public void setIdSaldo(Integer idSaldo) {
-        this.idSaldo = idSaldo;
-    }
     public String getNomeConta() {
         return nomeConta;
     }

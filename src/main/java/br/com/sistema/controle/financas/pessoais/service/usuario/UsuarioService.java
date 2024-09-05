@@ -5,7 +5,6 @@ import br.com.sistema.controle.financas.pessoais.dao.usuario.UsuarioDao;
 import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
 import br.com.sistema.controle.financas.pessoais.security.PasswordSecurity;
-import br.com.sistema.controle.financas.pessoais.utils.Constantes;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -29,14 +28,13 @@ public class UsuarioService {
 
         UsuarioEntity novoUsuario = usuarioDao.criarUsuario(usuario);
 
-        usuario.setSaldoAtual(0.00);
-        usuario.setDataAtualizadaSaldo(Timestamp.valueOf(LocalDateTime.now()));
-
         if(novoUsuario.getIdUsuario() != null){
-            saldoDao.inserirSaldo(
-                    novoUsuario.getIdUsuario(),
-                    novoUsuario.getSaldoAtual(),
-                    novoUsuario.getDataAtualizadaSaldo());
+            SaldoEntity inserirSaldo = new SaldoEntity();
+            inserirSaldo.setIdUsuario(novoUsuario.getIdUsuario());
+            inserirSaldo.setSaldoAtual(0.00);
+            inserirSaldo.setDataAtualizadaSaldo(Timestamp.valueOf(LocalDateTime.now()));
+
+            saldoDao.inserirSaldo(inserirSaldo);
         }
         return novoUsuario;
     }

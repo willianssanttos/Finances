@@ -16,15 +16,28 @@ CREATE TABLE Saldo (
     FOREIGN KEY (fk_nr_id_usuario) REFERENCES Usuarios(nr_id_usuario)
 );
 
+-- Tabela tipo_conta
+CREATE TABLE tipo_conta (
+    nr_id_tipo_conta SERIAL PRIMARY KEY,
+    nm_tipo_conta VARCHAR(255) NOT NULL
+);
+
+INSERT INTO tipo_conta (nm_tipo_conta) VALUES ('CORRENTE');
+INSERT INTO tipo_conta (nm_tipo_conta) VALUES ('POUPANÇA');
+INSERT INTO tipo_conta (nm_tipo_conta) VALUES ('INVESTIMENTO');
+INSERT INTO tipo_conta (nm_tipo_conta) VALUES ('BENEFICIOS');
+INSERT INTO tipo_conta (nm_tipo_conta) VALUES ('OUTROS');
+
 -- Tabela de Contas (por exemplo, conta bancária, carteira, etc.)
 CREATE TABLE Contas (
     nr_id_conta SERIAL PRIMARY KEY,
     fk_nr_id_usuario INT NOT NULL,
     fk_nr_id_saldo INT NOT NULL,
+    fk_nr_id_tipo_conta INT NOT NULL,
     nm_nome VARCHAR(255) NOT NULL,
     ds_saldo DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-    ds_tipo_conta VARCHAR(255) NOT NULL,
     ds_data_deposito TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (fk_nr_id_tipo_conta) REFERENCES tipo_conta(nr_id_tipo_conta),
     FOREIGN KEY (fk_nr_id_usuario) REFERENCES Usuarios(nr_id_usuario),
     FOREIGN KEY (fk_nr_id_saldo) REFERENCES Saldo(nr_id_saldo)
 );

@@ -250,6 +250,7 @@ public class Main {
                 continue;
             }
             novaConta.setTipoConta(tipoConta);
+
             break;
         } while (true);
 

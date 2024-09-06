@@ -18,9 +18,9 @@ public class ContaDaoImpl implements ContaDao {
 
             ps.setInt(1, conta.getIdUsuario());
             ps.setInt(2, conta.getIdSaldo());
-            ps.setString(3, conta.getNomeConta());
-            ps.setDouble(4, conta.getSaldoConta());
-            ps.setString(5, conta.getTipoConta());
+            ps.setInt(3, Integer.parseInt((conta.getTipoConta())));
+            ps.setString(4, conta.getNomeConta());
+            ps.setDouble(5, conta.getSaldoConta());
             ps.setTimestamp(6, conta.getDataDeposito());
 
             ResultSet rs = ps.executeQuery();

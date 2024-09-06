@@ -13,19 +13,36 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION inserir_conta(
     p_id_usuario INTEGER,
     p_id_saldo INTEGER,
+    p_tipo_conta INTEGER,
     p_nome_conta VARCHAR,
     p_saldo DOUBLE PRECISION,
-    p_tipo_conta VARCHAR,
     p_data_deposito TIMESTAMP
 ) RETURNS INTEGER AS $$
 DECLARE
     v_id_conta INTEGER;
 BEGIN
-    INSERT INTO contas (fk_nr_id_usuario, fk_nr_id_saldo, nm_nome, ds_saldo, ds_tipo_conta, ds_data_deposito)
-    VALUES (p_id_usuario, p_id_saldo, p_nome_conta, p_saldo, p_tipo_conta, p_data_deposito)
+    INSERT INTO contas (fk_nr_id_usuario, fk_nr_id_saldo, fk_nr_id_tipo_conta, nm_nome, ds_saldo, ds_data_deposito)
+    VALUES (p_id_usuario, p_id_saldo, p_tipo_conta, p_nome_conta, p_saldo, p_data_deposito)
     RETURNING nr_id_conta INTO v_id_conta;
 
     RETURN v_id_conta;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION buscar_tipo_conta_por_nome(p_nm_tipo_conta VARCHAR)
+RETURNS INT AS $$
+DECLARE
+    id_tipo_conta INT;
+BEGIN
+    SELECT nr_id_tipo_conta INTO id_tipo_conta
+    FROM tipo_conta
+    WHERE nm_tipo_conta = p_nm_tipo_conta;
+
+    IF id_tipo_conta IS NULL THEN
+        RAISE EXCEPTION 'Tipo de conta não encontrado';
+    END IF;
+
+    RETURN id_tipo_conta;
 END;
 $$ LANGUAGE plpgsql;
 

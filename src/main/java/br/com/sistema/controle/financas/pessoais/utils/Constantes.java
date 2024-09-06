@@ -4,7 +4,6 @@ public class Constantes {
 
     public static final String bemVindo = "BEM VINDO";
     public static final String OpcaoInvalida = "Opção invalida, utilize somente os números mostrados no Menu!";
-
     public static final String cadastroNome = "Nome invalido! O nome deve conter somente letras, com no minimo 2 e no máximo 100 caracteres!";
 
     public static final String cadastroEmail = "Insira um Email válido";

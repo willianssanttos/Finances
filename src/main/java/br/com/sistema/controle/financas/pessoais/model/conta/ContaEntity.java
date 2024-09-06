@@ -1,5 +1,7 @@
 package br.com.sistema.controle.financas.pessoais.model.conta;
 
+import br.com.sistema.controle.financas.pessoais.enuns.TipoContaEnum;
+
 import java.sql.Timestamp;
 
 public class ContaEntity extends SaldoEntity{
@@ -17,6 +19,13 @@ public class ContaEntity extends SaldoEntity{
     public void setIdConta(Integer idConta) {
         this.idConta = idConta;
     }
+    public String getTipoConta() {
+        return tipoConta;
+    }
+
+    public void setTipoConta(String tipoConta) {
+        this.tipoConta = tipoConta;
+    }
 
     public String getNomeConta() {
         return nomeConta;
@@ -32,14 +41,6 @@ public class ContaEntity extends SaldoEntity{
 
     public void setSaldoConta(Double saldoConta) {
         this.saldoConta = saldoConta;
-    }
-
-    public String getTipoConta() {
-        return tipoConta;
-    }
-
-    public void setTipoConta(String tipoConta) {
-        this.tipoConta = tipoConta;
     }
 
     public Timestamp getDataDeposito() {

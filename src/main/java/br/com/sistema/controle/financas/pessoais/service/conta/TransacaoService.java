@@ -1,5 +1,6 @@
 package br.com.sistema.controle.financas.pessoais.service.conta;
 
+import br.com.sistema.controle.financas.pessoais.dao.conta.Impl.TransacaoContaDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.conta.TransacaoContaDao;
 import br.com.sistema.controle.financas.pessoais.model.conta.TransacoesContaEntity;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 public class TransacaoService {
     private TransacaoContaDao transacaoContaDao;
     public TransacaoService(){
-        this.transacaoContaDao = new TransacaoContaDao();
+        this.transacaoContaDao = new TransacaoContaDaoImpl();
     }
 
     public void registrarTransacao(Integer idSaldo, Integer idConta, String descricao, Double valor, int tipo){

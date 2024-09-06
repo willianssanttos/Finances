@@ -1,10 +1,8 @@
 package br.com.sistema.controle.financas.pessoais.controller;
 
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
-import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
 import br.com.sistema.controle.financas.pessoais.service.conta.ContaService;
-import br.com.sistema.controle.financas.pessoais.service.conta.SaldoService;
 import br.com.sistema.controle.financas.pessoais.service.conta.TransacaoService;
 import br.com.sistema.controle.financas.pessoais.service.usuario.UsuarioService;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
@@ -17,9 +15,7 @@ import static br.com.sistema.controle.financas.pessoais.utils.validacoes.Validar
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Scanner;
-
 
 public class Main {
 
@@ -87,11 +83,13 @@ public class Main {
         while (true) {
 
             Double saldoAtual = contaService.obterSaldo(idUsuario);
-            System.out.println("SALDO R$: " + saldoAtual);
+            System.out.println("SEU SALDO TOTAL R$: " + saldoAtual);
 
             System.out.println("(1) Adicionar conta");
             System.out.println("Escolha a opção desejada: ");
             System.out.println("(2) Realizar Transação");
+            System.out.println("Escolha a opção desejada: ");
+            System.out.println("(3) Deslogar");
             System.out.println("Escolha a opção desejada: ");
 
             String logadoUsuario = input.nextLine();
@@ -99,14 +97,14 @@ public class Main {
                 System.err.println(Constantes.OpcaoInvalida);
                 continue;
             }
-            int Usuario = Integer.parseInt(logadoUsuario);
+            int opcaoEscolha = Integer.parseInt(logadoUsuario);
 
-            switch (Usuario) {
+            switch (opcaoEscolha) {
                 case 1:
-                    cadastrarConta(input, Usuario, idUsuario);
+                    cadastrarConta(input, idUsuario, idUsuario);
                     break;
                 case 2:
-                    registrarTransacao(input,Usuario);
+                    registrarTransacao(input, idUsuario);
                     break;
                 case 3:
                     return;
@@ -263,7 +261,6 @@ public class Main {
             System.err.println(Constantes.ErroCadastroConta);
         }
         System.out.println(Constantes.cadastroConta);
-
     }
 
     public static void registrarTransacao(Scanner input, Integer idConta) {

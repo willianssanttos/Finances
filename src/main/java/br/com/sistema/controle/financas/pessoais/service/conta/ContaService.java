@@ -1,21 +1,22 @@
 package br.com.sistema.controle.financas.pessoais.service.conta;
 
 import br.com.sistema.controle.financas.pessoais.dao.conta.ContaDao;
+import br.com.sistema.controle.financas.pessoais.dao.conta.Impl.ContaDaoImpl;
+import br.com.sistema.controle.financas.pessoais.dao.conta.Impl.SaldoDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.conta.SaldoDao;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class ContaService {
 
     private ContaDao contaDao;
     private SaldoDao saldoDao;
     public ContaService(){
-        this.contaDao = new ContaDao();
-        this.saldoDao = new SaldoDao();
+        this.contaDao = new ContaDaoImpl();
+        this.saldoDao = new SaldoDaoImpl();
     }
 
    public ContaEntity criarConta(ContaEntity conta){
@@ -29,14 +30,6 @@ public class ContaService {
 
         ContaEntity novaConta = contaDao.criarConta(conta);
 
-        if (novaConta.getIdConta() != null){
-            SaldoEntity inserirSaldo = new SaldoEntity();
-            inserirSaldo.setIdUsuario(novaConta.getIdUsuario());
-            inserirSaldo.setSaldoAtual(novaConta.getSaldoConta());
-            inserirSaldo.setDataAtualizadaSaldo(novaConta.getDataDeposito());
-
-            saldoDao.inserirSaldo(inserirSaldo);
-        }
         return novaConta;
     }
 

@@ -6,9 +6,7 @@ import br.com.sistema.controle.financas.pessoais.dao.conta.Impl.SaldoDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.conta.Impl.TipoContaImpl;
 import br.com.sistema.controle.financas.pessoais.dao.conta.SaldoDao;
 import br.com.sistema.controle.financas.pessoais.dao.conta.TipoContaDao;
-import br.com.sistema.controle.financas.pessoais.enuns.TipoContaEnum;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
-import br.com.sistema.controle.financas.pessoais.model.conta.TipoContaEntity;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
 
 public class ContaService {
@@ -29,7 +27,7 @@ public class ContaService {
            throw new IllegalArgumentException(Constantes.cadastroTipoConta);
        }
 
-       conta.getIdUsuario();
+        conta.getIdUsuario();
         conta.getIdSaldo();
         conta.getNomeConta();
         conta.getSaldoConta();

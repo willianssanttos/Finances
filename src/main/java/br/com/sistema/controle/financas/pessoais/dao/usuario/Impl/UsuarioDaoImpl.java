@@ -54,6 +54,30 @@ public class UsuarioDaoImpl implements UsuarioDao {
         return emailExiste;
     }
 
+    public boolean validarLogin(String email, String senha) {
+        String sql = "SELECT validar_login(?,?)";
+
+        boolean loginValido = false;
+
+        try (Connection conn = DataSourceConfig.getConexao();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ps.setString(2, senha);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                loginValido = rs.getBoolean(1);
+            }
+            rs.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return loginValido;
+    }
+
     public Integer obterIdUsuarioPorEmail(String email) {
         String sql = "SELECT recuperar_id_usuario_por_email(?)";
         Integer idUsuario = null;

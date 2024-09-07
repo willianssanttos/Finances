@@ -2,6 +2,7 @@ package br.com.sistema.controle.financas.pessoais.controller;
 
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
+import br.com.sistema.controle.financas.pessoais.security.PasswordSecurity;
 import br.com.sistema.controle.financas.pessoais.service.conta.ContaService;
 import br.com.sistema.controle.financas.pessoais.service.conta.TransacaoService;
 import br.com.sistema.controle.financas.pessoais.service.usuario.UsuarioService;
@@ -66,6 +67,13 @@ public class Main {
 
         System.out.println("Digite a Senha: ");
         String senha = input.nextLine();
+
+        boolean loginValido = usuarioService.autenticarUsuario(email, senha);
+
+        if (!loginValido){
+            System.err.println(Constantes.erroLoginConta);
+            return;
+        }
 
         Integer idUsuario = usuarioService.obterIdUsuarioPorEmail(email);
 

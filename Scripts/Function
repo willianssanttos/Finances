@@ -10,6 +10,30 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+create extension if not exists pgcrypto;
+
+CREATE OR REPLACE FUNCTION validar_login(email_usuario VARCHAR, senha_usuario VARCHAR)
+RETURNS BOOLEAN AS $$
+DECLARE
+    senha_hash VARCHAR;
+    senha_valida BOOLEAN;
+BEGIN
+    -- Recupera o hash da senha do usuário pelo email
+    SELECT ds_senha INTO senha_hash FROM usuarios WHERE ds_email = email_usuario;
+
+    -- Verifica se o hash existe (usuário encontrado)
+    IF senha_hash IS NULL THEN
+        RETURN FALSE;  -- Usuário não encontrado
+    END IF;
+
+    -- Utiliza a função nativa do PostgreSQL para comparar o hash BCrypt
+    senha_valida := crypt(senha_usuario, senha_hash) = senha_hash;
+
+    -- Retorna se a senha é válida ou não
+    RETURN senha_valida;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION inserir_conta(
     p_id_usuario INTEGER,
     p_id_saldo INTEGER,

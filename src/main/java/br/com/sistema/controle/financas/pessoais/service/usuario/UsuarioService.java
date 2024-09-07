@@ -44,6 +44,10 @@ public class UsuarioService {
     public Boolean emailExiste(String email){
         return usuarioDao.verificarEmailExistente(email);
     }
+    public boolean autenticarUsuario(String email, String senha){
+        return usuarioDao.validarLogin(email, senha);
+    }
+
     public Integer obterIdUsuarioPorEmail(String email){
         return usuarioDao.obterIdUsuarioPorEmail(email);
     }

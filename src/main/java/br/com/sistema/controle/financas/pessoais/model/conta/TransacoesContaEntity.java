@@ -5,21 +5,12 @@ import java.time.LocalDateTime;
 
 public class TransacoesContaEntity {
 
-    private Integer idTransacao;
     private Integer idSaldo;
     private Integer idConta;
     private String Descricao;
     private Double Valor;
     private Timestamp dataMovimentacao;
     private int tipo;
-
-    public Integer getIdTransacao() {
-        return idTransacao;
-    }
-
-    public void setIdTransacao(Integer idTransacao) {
-        this.idTransacao = idTransacao;
-    }
 
     public Integer getIdSaldo() {
         return idSaldo;

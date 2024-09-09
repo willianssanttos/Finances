@@ -22,6 +22,7 @@ public class TipoContaImpl implements TipoContaDao {
             if (rs.next()) {
                 return rs.getString(1);
             }
+            rs.close();
 
         } catch (SQLException e) {
             e.printStackTrace();

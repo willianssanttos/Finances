@@ -3,9 +3,8 @@ package br.com.sistema.controle.financas.pessoais.dao.conta.Impl;
 import br.com.sistema.controle.financas.pessoais.configuration.DataSourceConfig;
 import br.com.sistema.controle.financas.pessoais.dao.conta.TransacaoContaDao;
 import br.com.sistema.controle.financas.pessoais.model.conta.TransacoesContaEntity;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
+import java.sql.*;
 
 public class TransacaoContaDaoImpl implements TransacaoContaDao {
     public void inserirTransacao(TransacoesContaEntity transacao){
@@ -20,7 +19,7 @@ public class TransacaoContaDaoImpl implements TransacaoContaDao {
             ps.setTimestamp(5, transacao.getDataMovimentacao());
             ps.setInt(6, transacao.getTipo());
 
-            ps.executeUpdate();
+            ps.executeQuery();
 
         } catch (SQLException e){
             e.printStackTrace();

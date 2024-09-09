@@ -2,7 +2,6 @@ package br.com.sistema.controle.financas.pessoais.controller;
 
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
-import br.com.sistema.controle.financas.pessoais.security.PasswordSecurity;
 import br.com.sistema.controle.financas.pessoais.service.conta.ContaService;
 import br.com.sistema.controle.financas.pessoais.service.conta.TransacaoService;
 import br.com.sistema.controle.financas.pessoais.service.usuario.UsuarioService;
@@ -16,6 +15,7 @@ import static br.com.sistema.controle.financas.pessoais.utils.validacoes.Validar
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -272,7 +272,36 @@ public class Main {
         System.out.println(Constantes.cadastroConta);
     }
 
-    public static void registrarTransacao(Scanner input, Integer idConta) {
+    public static void registrarTransacao(Scanner input, Integer idUsuario) {
+
+        List<ContaEntity> contas = contaService.obterContasPorIdUsuario(idUsuario);
+
+        if (contas.isEmpty()){
+            System.err.println("Nenhuma conta encontrada para o usuário!");
+            return;
+        }
+
+        System.out.println("Selecione a conta para realizar a transação: ");
+        for (int i = 0; i < contas.size(); i++){
+            ContaEntity conta = contas.get(i);
+            System.out.println((i + 1) + ". Conta: " + conta.getNomeConta() +
+                    " | Tipo conta: " + conta.getTipoConta() +
+                    " | Saldo R$ " + conta.getSaldoConta());
+        }
+
+        System.out.println("\n Digite o número da conta:");
+        int escolha = Integer.parseInt(input.nextLine());
+
+
+        if (escolha < 1 || escolha > contas.size()){
+            System.err.println("Opção invalida.");
+            return;
+        }
+
+        ContaEntity contaSelecionada = contas.get(escolha - 1);
+
+        System.out.println("Conta selecionada: " + contaSelecionada.getIdConta() + "- " + contaSelecionada.getNomeConta());
+
         System.out.println("Digite a descrição da transação:");
         String descricao = input.nextLine();
 
@@ -282,7 +311,12 @@ public class Main {
         System.out.println("Digite o tipo de transação (1 para entrada, 2 para saída):");
         int tipo = Integer.parseInt(input.nextLine());
 
-        transacaoService.registrarTransacao(idConta, idConta, descricao, valor, tipo);
+        if (tipo != 1 && tipo != 2){
+            System.err.println("Tipo de transação invalida.");
+            return;
+        }
+
+        transacaoService.registrarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(), descricao, valor, tipo);
 
         System.out.println(Constantes.cadastroTransacao);
     }

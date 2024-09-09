@@ -23,6 +23,7 @@ public class SaldoDaoImpl implements SaldoDao {
                 int idSaldo = rs.getInt(1);
                 saldo.setIdSaldo(idSaldo);
             }
+            rs.close();
 
         } catch (SQLException e){
             e.printStackTrace();
@@ -44,6 +45,7 @@ public class SaldoDaoImpl implements SaldoDao {
             if (rs.next()){
                 saldoTotal = rs.getDouble(1);
             }
+            rs.close();
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -21,6 +21,7 @@ public class Constantes {
 
     public static final String EmailJaCadastrado = "Esse e-mail, já foi cadastrado!";
 
+    public static final String ErroVerificarEmail = "O e-mail, não foi possivel ser verificado!";
     public static final String ErroCadastroConta = "Erro! Adicionar conta!";
 
 
@@ -37,7 +38,11 @@ public class Constantes {
 
     public static final String cadastroTransacao = "Transação registrada com sucesso!";
 
+    public static final String ErrocadastroTransacao = "Erro ao realizar registro transação!";
 
+    public static final String ErrorRecuperarIdUsuario = "Erro ao recuperar o id do usuario!";
+
+    public static final String ErrorRecuperarContas = "Erro ao recuperar contas do usuario!";
     ///status da conta////
     public static final String clienteEmail = "Digite o E-MAIL";
 

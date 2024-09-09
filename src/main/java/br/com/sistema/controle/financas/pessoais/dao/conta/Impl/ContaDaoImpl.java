@@ -28,6 +28,7 @@ public class ContaDaoImpl implements ContaDao {
                 int idConta = rs.getInt(1);
                 conta.setIdConta(idConta);
             }
+            rs.close();
 
         } catch (SQLException e){
             e.printStackTrace();
@@ -49,11 +50,13 @@ public class ContaDaoImpl implements ContaDao {
                 ContaEntity conta = new ContaEntity();
                 conta.setIdConta(rs.getInt("nr_id_conta"));
                 conta.setIdSaldo(rs.getInt("fk_nr_id_saldo"));
+                conta.setTipoConta(rs.getString("nm_tipo_conta"));
                 conta.setNomeConta(rs.getString("nm_nome"));
                 conta.setSaldoConta(rs.getDouble("ds_saldo"));
                 conta.setDataDeposito(Timestamp.valueOf(rs.getTimestamp("ds_data_deposito").toLocalDateTime()));
                 contas.add(conta);
             }
+            rs.close();
 
         } catch (SQLException e) {
             e.printStackTrace();

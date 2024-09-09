@@ -1,0 +1,163 @@
+CREATE OR REPLACE FUNCTION inserir_usuario(nm_nome VARCHAR, ds_email VARCHAR, ds_senha VARCHAR, ds_telefone VARCHAR)
+RETURNS INT AS $$
+DECLARE
+	new_id INT;
+BEGIN
+    INSERT INTO usuarios (nm_nome, ds_email, ds_senha, ds_telefone)
+    VALUES (nm_nome, ds_email, ds_senha, ds_telefone)
+	RETURNING nr_id_usuario INTO new_id;
+	RETURN new_id;
+END;
+$$ LANGUAGE plpgsql;
+
+create extension if not exists pgcrypto;
+
+CREATE OR REPLACE FUNCTION validar_login(email_usuario VARCHAR, senha_usuario VARCHAR)
+RETURNS BOOLEAN AS $$
+DECLARE
+    senha_hash VARCHAR;
+    senha_valida BOOLEAN;
+BEGIN
+    -- Recupera o hash da senha do usuário pelo email
+    SELECT ds_senha INTO senha_hash FROM usuarios WHERE ds_email = email_usuario;
+
+    -- Verifica se o hash existe (usuário encontrado)
+    IF senha_hash IS NULL THEN
+        RETURN FALSE;  -- Usuário não encontrado
+    END IF;
+
+    -- Utiliza a função nativa do PostgreSQL para comparar o hash BCrypt
+    senha_valida := crypt(senha_usuario, senha_hash) = senha_hash;
+
+    -- Retorna se a senha é válida ou não
+    RETURN senha_valida;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION inserir_conta(
+    p_id_usuario INTEGER,
+    p_id_saldo INTEGER,
+    p_tipo_conta INTEGER,
+    p_nome_conta VARCHAR,
+    p_saldo DOUBLE PRECISION,
+    p_data_deposito TIMESTAMP
+) RETURNS INTEGER AS $$
+DECLARE
+    v_id_conta INTEGER;
+BEGIN
+    INSERT INTO contas (fk_nr_id_usuario, fk_nr_id_saldo, fk_nr_id_tipo_conta, nm_nome, ds_saldo, ds_data_deposito)
+    VALUES (p_id_usuario, p_id_saldo, p_tipo_conta, p_nome_conta, p_saldo, p_data_deposito)
+    RETURNING nr_id_conta INTO v_id_conta;
+
+    RETURN v_id_conta;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION buscar_tipo_conta_por_nome(p_nm_tipo_conta VARCHAR)
+RETURNS INT AS $$
+DECLARE
+    id_tipo_conta INT;
+BEGIN
+    SELECT nr_id_tipo_conta INTO id_tipo_conta
+    FROM tipo_conta
+    WHERE nm_tipo_conta = p_nm_tipo_conta;
+
+    IF id_tipo_conta IS NULL THEN
+        RAISE EXCEPTION 'Tipo de conta não encontrado';
+    END IF;
+
+    RETURN id_tipo_conta;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION inserir_saldo(
+	fk_nr_id_usuario INTEGER,
+	ds_saldo_atual DOUBLE PRECISION,
+	data_atualizacao TIMESTAMP
+)
+RETURNS INTEGER AS $$
+DECLARE
+	new_id INTEGER;
+BEGIN
+    INSERT INTO saldo (fk_nr_id_usuario, ds_saldo_atual, data_atualizacao)
+    VALUES (fk_nr_id_usuario, ds_saldo_atual, data_atualizacao)
+	RETURNING nr_id_saldo INTO new_id;
+	RETURN new_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_atualizar_saldo
+AFTER INSERT ON contas
+FOR EACH ROW
+EXECUTE FUNCTION trigger_atualizar_saldo();
+
+CREATE OR REPLACE FUNCTION trigger_atualizar_saldo()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Chama a função de atualização do saldo passando o id do usuário
+    PERFORM atualizar_saldo_usuario(NEW.fk_nr_id_usuario);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION atualizar_saldo_usuario(p_id_usuario INTEGER)
+RETURNS VOID AS $$
+DECLARE
+    novo_saldo DECIMAL;
+BEGIN
+    -- Soma os saldos de todas as contas do usuário
+    SELECT COALESCE(SUM(ds_saldo), 0) INTO novo_saldo
+    FROM contas
+    WHERE fk_nr_id_usuario = p_id_usuario;
+
+    -- Atualiza o saldo na tabela saldo
+    UPDATE saldo
+    SET ds_saldo_atual = novo_saldo,
+        data_atualizacao = CURRENT_TIMESTAMP
+    WHERE fk_nr_id_usuario = p_id_usuario;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION obter_saldo_total(p_fk_nr_id_usuario INTEGER)
+RETURNS DECIMAL AS $$
+DECLARE
+    saldo_total DECIMAL;
+BEGIN
+    -- Soma de todos os saldos atualizados para o usuário
+    SELECT SUM(ds_saldo_atual) INTO saldo_total
+    FROM saldo
+    WHERE fk_nr_id_usuario = p_fk_nr_id_usuario;
+
+    -- Se não houver registros de saldo, retorne 0
+    IF saldo_total IS NULL THEN
+        saldo_total := 0;
+    END IF;
+
+    RETURN saldo_total;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION verificar_email_existente(p_email VARCHAR)
+RETURNS BOOLEAN AS $$
+DECLARE
+    email_existe BOOLEAN;
+BEGIN
+    SELECT EXISTS(SELECT 1 FROM usuarios WHERE ds_email = p_email) INTO email_existe;
+    RETURN email_existe;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION recuperar_id_usuario_por_email(p_email VARCHAR)
+RETURNS INT AS $$
+DECLARE
+    v_id_usuario INT;
+BEGIN
+    SELECT nr_id_usuario INTO v_id_usuario
+    FROM usuarios
+    WHERE ds_email = p_email;
+
+    RETURN v_id_usuario;
+END;
+$$ LANGUAGE plpgsql;

@@ -90,7 +90,20 @@ public class Main {
         while (true) {
 
             Double saldoAtual = contaService.obterSaldo(idUsuario);
-            System.out.println("SEU SALDO TOTAL R$: " + saldoAtual);
+            System.out.println("SEU SALDO R$: " + saldoAtual);
+
+            List<ContaEntity> contas = contaService.obterContasPorIdUsuario(idUsuario);
+
+            if (contas.isEmpty()){
+                System.err.println(Constantes.contaNaoEncontrada);
+                return;
+            }
+
+            for (int i = 0; i < contas.size(); i++){
+                ContaEntity conta = contas.get(i);
+                System.out.println("Conta: " + conta.getNomeConta() +
+                        " | Saldo R$ " + conta.getSaldoConta());
+            }
 
             System.out.println("(1) Adicionar conta");
             System.out.println("Escolha a opção desejada: ");
@@ -288,7 +301,7 @@ public class Main {
                     " | Saldo R$ " + conta.getSaldoConta());
         }
 
-        System.out.println("\n Digite o número da conta:");
+        System.out.println("\nDigite o número da conta:");
         int escolha = Integer.parseInt(input.nextLine());
 
 
@@ -298,8 +311,6 @@ public class Main {
         }
 
         ContaEntity contaSelecionada = contas.get(escolha - 1);
-
-        System.out.println("Conta selecionada: " + contaSelecionada.getIdConta() + "- " + contaSelecionada.getNomeConta());
 
         System.out.println("Digite a descrição da transação:");
         String descricao = input.nextLine();

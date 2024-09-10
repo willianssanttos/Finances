@@ -76,19 +76,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_atualizar_saldo
-AFTER INSERT ON contas
-FOR EACH ROW
-EXECUTE FUNCTION trigger_atualizar_saldo();
-
-CREATE OR REPLACE FUNCTION trigger_atualizar_saldo()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Chama a função de atualização do saldo passando o id do usuário
-    PERFORM atualizar_saldo_usuario(NEW.fk_nr_id_usuario);
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION atualizar_saldo_usuario(p_id_usuario INTEGER)
 RETURNS VOID AS $$
@@ -108,6 +95,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION trigger_atualizar_saldo()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Chama a função de atualização do saldo passando o id do usuário
+    PERFORM atualizar_saldo_usuario(NEW.fk_nr_id_usuario);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_atualizar_saldo
+AFTER INSERT ON contas
+FOR EACH ROW
+EXECUTE FUNCTION trigger_atualizar_saldo()
 
 CREATE OR REPLACE FUNCTION obter_saldo_total(p_fk_nr_id_usuario INTEGER)
 RETURNS DECIMAL AS $$

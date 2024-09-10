@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class Main {
 
     static UsuarioService usuarioService = new UsuarioService();
@@ -308,7 +309,7 @@ public class Main {
         System.out.println("Digite o valor da transação:");
         Double valor = Double.parseDouble(input.nextLine());
 
-        System.out.println("Digite o tipo de transação (1 para entrada, 2 para saída):");
+        System.out.println("Digite o tipo de transação (1 para receitas, 2 para despesas):");
         int tipo = Integer.parseInt(input.nextLine());
 
         if (tipo != 1 && tipo != 2){

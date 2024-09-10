@@ -69,9 +69,9 @@ public class Main {
         System.out.println("Digite a Senha: ");
         String senha = input.nextLine();
 
-        boolean loginValido = usuarioService.autenticarUsuario(email, senha);
+        UsuarioEntity loginValido = usuarioService.autenticarUsuario(email, senha);
 
-        if (!loginValido){
+        if (loginValido == null){
             System.err.println(Constantes.erroLoginConta);
             return;
         }
@@ -82,9 +82,7 @@ public class Main {
             System.err.println(Constantes.erroLoginConta);
             return;
         }
-
         System.out.println(Constantes.loginConta);
-
         usuarioLogado(input, idUsuario);
     }
 

@@ -18,8 +18,8 @@ public class UsuarioService {
     private UsuarioDao usuarioDao;
     private SaldoDao saldoDao;
 
-    public UsuarioService(){
-        this.usuarioDao =  new UsuarioDaoImpl();
+    public UsuarioService() {
+        this.usuarioDao = new UsuarioDaoImpl();
         this.saldoDao = new SaldoDaoImpl();
     }
 
@@ -32,7 +32,7 @@ public class UsuarioService {
 
             UsuarioEntity novoUsuario = usuarioDao.criarUsuario(usuario);
 
-            if(novoUsuario.getIdUsuario() != null){
+            if (novoUsuario.getIdUsuario() != null) {
                 SaldoEntity inserirSaldo = new SaldoEntity();
                 inserirSaldo.setIdUsuario(novoUsuario.getIdUsuario());
                 inserirSaldo.setSaldoAtual(0.00);
@@ -41,29 +41,46 @@ public class UsuarioService {
                 saldoDao.inserirSaldo(inserirSaldo);
             }
             return novoUsuario;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(Constantes.ErroCadastroConta, e);
         }
     }
 
-    public Boolean emailExiste(String email){
+    public Boolean emailExiste(String email) {
         try {
             return usuarioDao.verificarEmailExistente(email);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(Constantes.ErroVerificarEmail, e);
         }
     }
-    public boolean autenticarUsuario(String email, String senha){
+
+    public UsuarioEntity autenticarUsuario(String email, String senha) {
         try {
-            return usuarioDao.validarLogin(email, senha);
+            UsuarioEntity usuario = usuarioDao.validarLogin(email);
+
+            if (usuario == null) {
+                throw new IllegalArgumentException(Constantes.usuarioNaoEncontrado);
+            }
+
+            boolean senhaValida = PasswordSecurity.checkSenha(senha, usuario.getSenhaUsuario());
+            if (!senhaValida) {
+                throw new IllegalArgumentException(Constantes.erroLoginConta);
+            }
+            return usuario;
         } catch (Exception e){
+            e.printStackTrace();
             throw new ServiceException(Constantes.erroLoginConta, e);
         }
     }
 
     public Integer obterIdUsuarioPorEmail(String email){
-        return usuarioDao.obterIdUsuarioPorEmail(email);
+        try {
+            return usuarioDao.obterIdUsuarioPorEmail(email);
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

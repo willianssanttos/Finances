@@ -33,8 +33,7 @@ public class Constantes {
 
     public static final String erroLoginConta = "Usuário ou senha incorretos!";
 
-
-    public static final String statusCliente = "Preencha os campos abaixo para verificar o status da conta";
+    public static final String usuarioNaoEncontrado = "Usuario não encontrado!";
 
     public static final String tipoTransacao = "Tipo transação invalido! Valores permitidos. Use 1 para receitas e 2 para despesas!";
 

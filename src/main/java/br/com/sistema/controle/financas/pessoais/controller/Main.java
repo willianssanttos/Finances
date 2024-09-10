@@ -69,9 +69,9 @@ public class Main {
         System.out.println("Digite a Senha: ");
         String senha = input.nextLine();
 
-        boolean loginValido = usuarioService.autenticarUsuario(email, senha);
+        UsuarioEntity loginValido = usuarioService.autenticarUsuario(email, senha);
 
-        if (!loginValido){
+        if (loginValido == null){
             System.err.println(Constantes.erroLoginConta);
             return;
         }
@@ -82,9 +82,7 @@ public class Main {
             System.err.println(Constantes.erroLoginConta);
             return;
         }
-
         System.out.println(Constantes.loginConta);
-
         usuarioLogado(input, idUsuario);
     }
 
@@ -200,7 +198,7 @@ public class Main {
                     "Confirme novamente a senha",
                     "Senha não preenchida");
             if (!senha1.equals(senha2)) {
-                System.err.println("Senha incorreta! Verifique a senha digitada.");
+                System.err.println(Constantes.confirmacaoSenha);
                 continue;
             }
             novoUsuario.setSenhaUsuario(senha1);
@@ -278,7 +276,7 @@ public class Main {
         List<ContaEntity> contas = contaService.obterContasPorIdUsuario(idUsuario);
 
         if (contas.isEmpty()){
-            System.err.println("Nenhuma conta encontrada para o usuário!");
+            System.err.println(Constantes.contaNaoEncontrada);
             return;
         }
 
@@ -313,7 +311,7 @@ public class Main {
         int tipo = Integer.parseInt(input.nextLine());
 
         if (tipo != 1 && tipo != 2){
-            System.err.println("Tipo de transação invalida.");
+            System.err.println(Constantes.tipoTransacao);
             return;
         }
 

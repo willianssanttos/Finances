@@ -161,3 +161,130 @@ BEGIN
     RETURN v_id_usuario;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION buscar_contas_por_usuario(p_id_usuario INTEGER)
+RETURNS TABLE(
+    nr_id_conta INTEGER,
+    fk_nr_id_saldo INTEGER,
+    nm_tipo_conta VARCHAR,   -- Nome do tipo de conta em vez do ID
+    nm_nome VARCHAR,
+    ds_saldo NUMERIC(10, 2),
+    ds_data_deposito TIMESTAMP
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        c.nr_id_conta,
+        c.fk_nr_id_saldo,
+        tc.nm_tipo_conta,  -- Pega o nome do tipo de conta
+        c.nm_nome,
+        c.ds_saldo,
+        c.ds_data_deposito
+    FROM contas c
+    INNER JOIN tipo_conta tc ON c.fk_nr_id_tipo_conta = tc.nr_id_tipo_conta  -- Join com a tabela tipo_conta
+    WHERE c.fk_nr_id_usuario = p_id_usuario;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION buscar_tipo_conta_por_nome(p_nm_tipo_conta VARCHAR)
+RETURNS INT AS $$
+DECLARE
+    id_tipo_conta INT;
+BEGIN
+    SELECT nr_id_tipo_conta INTO id_tipo_conta
+    FROM tipo_conta
+    WHERE nm_tipo_conta = p_nm_tipo_conta;
+
+    IF id_tipo_conta IS NULL THEN
+        RAISE EXCEPTION 'Tipo de conta não encontrado';
+    END IF;
+
+    RETURN id_tipo_conta;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Função para inserir transação
+CREATE OR REPLACE FUNCTION inserir_transacao(
+    p_fk_nr_id_saldo INTEGER,
+    p_fk_nr_id_conta INTEGER,
+    p_ds_descricao VARCHAR,
+    p_ds_valor DOUBLE PRECISION,
+    p_ds_data_movimentacao TIMESTAMP,
+    p_tipo INTEGER
+)
+RETURNS INTEGER AS $$
+DECLARE
+    v_nr_id_transacao INTEGER;
+BEGIN
+    -- Verifica se o tipo é válido (1 para entrada, 2 para saída)
+    IF p_tipo NOT IN (1, 2) THEN
+        RAISE EXCEPTION 'Tipo de transação inválido. Use 1 para entrada e 2 para saída.';
+    END IF;
+
+    -- Insere a nova transação na tabela transacoes
+    INSERT INTO transacoes (fk_nr_id_saldo, fk_nr_id_conta, ds_descricao, ds_valor, ds_data_movimentacao, tipo)
+    VALUES (p_fk_nr_id_saldo, p_fk_nr_id_conta, p_ds_descricao, p_ds_valor, p_ds_data_movimentacao, p_tipo)
+    RETURNING nr_id_transacao INTO v_nr_id_transacao;
+
+    -- Retorna o ID da transação recém-criada
+    RETURN v_nr_id_transacao;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Função para atualizar o saldo nas tabelas saldo e conta
+CREATE OR REPLACE FUNCTION atualizar_saldo()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.tipo = 1 THEN
+        -- Se a transação for uma entrada, somar o valor ao saldo atual
+        UPDATE saldo
+        SET ds_saldo_atual = ds_saldo_atual + NEW.ds_valor,
+            data_atualizacao = CURRENT_TIMESTAMP
+        WHERE nr_id_saldo = NEW.fk_nr_id_saldo;
+
+        -- Atualiza o saldo da conta também
+        UPDATE contas
+        SET ds_saldo = ds_saldo + NEW.ds_valor
+        WHERE nr_id_conta = NEW.fk_nr_id_conta;
+
+    ELSIF NEW.tipo = 2 THEN
+        -- Se a transação for uma saída, subtrair o valor do saldo atual
+        UPDATE saldo
+        SET ds_saldo_atual = ds_saldo_atual - NEW.ds_valor,
+            data_atualizacao = CURRENT_TIMESTAMP
+        WHERE nr_id_saldo = NEW.fk_nr_id_saldo;
+
+        -- Atualiza o saldo da conta também
+        UPDATE contas
+        SET ds_saldo = ds_saldo - NEW.ds_valor
+        WHERE nr_id_conta = NEW.fk_nr_id_conta;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger para chamar a função após a inserção de uma transação
+CREATE TRIGGER trigger_atualizar_saldo
+AFTER INSERT ON transacoes
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_saldo();
+
+-- DROP FUNCTION public.obter_id_conta_por_nome(varchar);
+
+CREATE OR REPLACE FUNCTION public.obter_id_conta_por_nome(p_nome_conta character varying)
+ RETURNS integer
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    id_conta INT;
+BEGIN
+    SELECT nr_id_conta INTO id_conta
+    FROM contas
+    WHERE nm_nome = p_nome_conta
+    LIMIT 1;
+
+    RETURN id_conta;
+END;
+$function$
+;

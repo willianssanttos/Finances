@@ -6,7 +6,7 @@ public class Constantes {
     public static final String OpcaoInvalida = "Opção invalida, utilize somente os números mostrados no Menu!";
     public static final String cadastroNome = "Nome invalido! O nome deve conter somente letras, com no minimo 2 e no máximo 100 caracteres!";
 
-    public static final String cadastroEmail = "Insira um Email válido";
+    public static final String cadastroEmail = "Insira um E-mail válido!";
 
     public static final String cadastroCelular = "Insira o número de celular ou número fixo com DDD(dois digitos, ex: 11912341234)";
 

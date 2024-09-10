@@ -10,7 +10,6 @@ import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
 import br.com.sistema.controle.financas.pessoais.security.PasswordSecurity;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 

@@ -24,8 +24,8 @@ public class TransacaoService {
             }
 
             TransacoesContaEntity novaTransacao = new TransacoesContaEntity();
-            novaTransacao.setIdSaldo(idSaldo);
             novaTransacao.setIdConta(idConta);
+            novaTransacao.setIdSaldo(idSaldo);
             novaTransacao.setDescricao(descricao);
             novaTransacao.setValor(valor);
             novaTransacao.setTipo(tipo);

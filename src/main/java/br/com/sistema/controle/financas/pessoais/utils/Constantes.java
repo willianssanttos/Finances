@@ -12,6 +12,8 @@ public class Constantes {
 
     public static final String cadastroSenha = "Senha inválida. A senha deve ter no mínimo 8 caracteres, contendo letras, números e pelo menos um caractere especial (@, #, %, &, $).";
 
+    public static final String confirmacaoSenha = "Senha incorreta! Verifique a senha digitada.";
+
     public static final String CadastroRealizadoUsuario = "Cadastrado realizado com sucesso! ";
 
     public static final String MensagemLoginUsuario = "Utilize o email e a senha definida no cadastro para logar na conta";
@@ -34,7 +36,7 @@ public class Constantes {
 
     public static final String statusCliente = "Preencha os campos abaixo para verificar o status da conta";
 
-    public static final String tipoTransacao = "Tipo transação invalido! Valores permitidos. Use 1 para entrada e 2 para saida!";
+    public static final String tipoTransacao = "Tipo transação invalido! Valores permitidos. Use 1 para receitas e 2 para despesas!";
 
     public static final String cadastroTransacao = "Transação registrada com sucesso!";
 
@@ -49,6 +51,8 @@ public class Constantes {
     public static final String clienteSenha = "Digite a Senha";
 
     ////// cadastro da conta //////
+
+    public static final String contaNaoEncontrada = "Nenhuma conta encontrada para o usuário!";
 
     public static final String cadastroNomeConta = "Insira o nome da conta";
 

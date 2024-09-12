@@ -25,10 +25,10 @@ public class UsuarioService {
 
     public UsuarioEntity criarUsuario(UsuarioEntity usuario) {
         try {
-            usuario.getNomeUsuario();
-            usuario.getEmailUsuario();
+//            usuario.getNomeUsuario();
+//            usuario.getEmailUsuario();
             usuario.setSenhaUsuario(PasswordSecurity.encriptarSenha(usuario.getSenhaUsuario()));
-            usuario.getNumeroCelular();
+//            usuario.getNumeroCelular();
 
             UsuarioEntity novoUsuario = usuarioDao.criarUsuario(usuario);
 
@@ -61,23 +61,13 @@ public class UsuarioService {
             UsuarioEntity usuario = usuarioDao.validarLogin(email);
 
             if (usuario == null) {
-                throw new IllegalArgumentException(Constantes.usuarioNaoEncontrado);
+                return null;
             }
-
             boolean senhaValida = PasswordSecurity.checkSenha(senha, usuario.getSenhaUsuario());
             if (!senhaValida) {
-                throw new IllegalArgumentException(Constantes.erroLoginConta);
+                return null;
             }
             return usuario;
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new ServiceException(Constantes.erroLoginConta, e);
-        }
-    }
-
-    public Integer obterIdUsuarioPorEmail(String email){
-        try {
-            return usuarioDao.obterIdUsuarioPorEmail(email);
         } catch (Exception e){
             e.printStackTrace();
             return null;

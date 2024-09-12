@@ -1,9 +1,8 @@
 package br.com.sistema.controle.financas.pessoais.controller;
 
+import br.com.sistema.controle.financas.pessoais.facade.FacadeService;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
-import br.com.sistema.controle.financas.pessoais.service.conta.ContaService;
-import br.com.sistema.controle.financas.pessoais.service.conta.TransacaoService;
 import br.com.sistema.controle.financas.pessoais.service.usuario.UsuarioService;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
 import br.com.sistema.controle.financas.pessoais.utils.FuncoesUtil;
@@ -18,13 +17,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
-
 public class Main {
 
-    static UsuarioService usuarioService = new UsuarioService();
-    static ContaService contaService = new ContaService();
-    static TransacaoService transacaoService = new TransacaoService();
-
+  static UsuarioService usuarioService = new UsuarioService();
+  static FacadeService facadeService = FacadeService.getInstance();
 
     public static void main(String[] args) {
 
@@ -61,43 +57,48 @@ public class Main {
     }
 
     public static void realizarLogin(Scanner input){
+        while (true){
+            System.out.println("----LOGIN---\n");
 
-        System.out.println("----LOGIN---\n");
-        System.out.println("Digite o E-MAIL: ");
-        String email = input.nextLine();
+            System.out.println("Digite o E-MAIL: ");
+            String email = input.nextLine();
 
-        System.out.println("Digite a Senha: ");
-        String senha = input.nextLine();
+            System.out.println("Digite a Senha: ");
+            String senha = input.nextLine();
 
-        UsuarioEntity loginValido = usuarioService.autenticarUsuario(email, senha);
+            UsuarioEntity usuario = usuarioService.autenticarUsuario(email, senha);
 
-        if (loginValido == null){
-            System.err.println(Constantes.erroLoginConta);
-            return;
+            if (usuario == null){
+                System.err.println(Constantes.erroLoginConta);
+            } else {
+                System.out.println(Constantes.loginConta);
+                usuarioLogado(input, usuario.getIdUsuario());
+                break;
+            }
         }
-
-        Integer idUsuario = usuarioService.obterIdUsuarioPorEmail(email);
-
-        if (idUsuario == null){
-            System.err.println(Constantes.erroLoginConta);
-            return;
-        }
-        System.out.println(Constantes.loginConta);
-        usuarioLogado(input, idUsuario);
     }
 
     public static void usuarioLogado(Scanner input, Integer idUsuario) {
         while (true) {
+            Double saldoAtual = facadeService.obterSaldoTotal(idUsuario);
+            System.out.println("SEU SALDO R$: " + saldoAtual);
 
-            Double saldoAtual = contaService.obterSaldo(idUsuario);
-            System.out.println("SEU SALDO TOTAL R$: " + saldoAtual);
+            List<ContaEntity> contas = facadeService.obterContasPorUsuario(idUsuario);
+
+            if (contas == null){
+                System.out.println(Constantes.criarConta);
+                continue;
+            }
+
+            for (int i = 0; i < contas.size(); i++){
+                ContaEntity conta = contas.get(i);
+                System.out.println("Conta: " + conta.getNomeConta() +
+                        " | Saldo R$ " + conta.getSaldoConta());
+            }
 
             System.out.println("(1) Adicionar conta");
-            System.out.println("Escolha a opção desejada: ");
             System.out.println("(2) Realizar Transação");
-            System.out.println("Escolha a opção desejada: ");
             System.out.println("(3) Deslogar");
-            System.out.println("Escolha a opção desejada: ");
 
             String logadoUsuario = input.nextLine();
             if (!FuncoesUtil.ehNumero(logadoUsuario)) {
@@ -169,10 +170,7 @@ public class Main {
             break;
         } while (true);
 
-        if (usuarioService.criarUsuario(novoUsuario) == null) {
-            System.err.println(Constantes.ErroCadastroUsuario);
-        }
-
+        facadeService.criarUsuario(novoUsuario);
         System.out.println(Constantes.CadastroRealizadoUsuario);
         System.out.println(Constantes.MensagemLoginUsuario);
 
@@ -257,7 +255,6 @@ public class Main {
                 continue;
             }
             novaConta.setTipoConta(tipoConta);
-
             break;
         } while (true);
 
@@ -265,15 +262,12 @@ public class Main {
         novaConta.setIdSaldo(idSaldo);
         novaConta.setDataDeposito(Timestamp.valueOf(LocalDateTime.now()));
 
-        if (contaService.criarConta(novaConta) == null){
-            System.err.println(Constantes.ErroCadastroConta);
-        }
+        facadeService.criarConta(novaConta);
         System.out.println(Constantes.cadastroConta);
     }
 
-    public static void registrarTransacao(Scanner input, Integer idUsuario) {
-
-        List<ContaEntity> contas = contaService.obterContasPorIdUsuario(idUsuario);
+   public static void registrarTransacao(Scanner input, Integer idUsuario) {
+        List<ContaEntity> contas = facadeService.obterContasPorUsuario(idUsuario);
 
         if (contas.isEmpty()){
             System.err.println(Constantes.contaNaoEncontrada);
@@ -288,7 +282,7 @@ public class Main {
                     " | Saldo R$ " + conta.getSaldoConta());
         }
 
-        System.out.println("\n Digite o número da conta:");
+        System.out.println("\nDigite o número da conta:");
         int escolha = Integer.parseInt(input.nextLine());
 
 
@@ -298,8 +292,6 @@ public class Main {
         }
 
         ContaEntity contaSelecionada = contas.get(escolha - 1);
-
-        System.out.println("Conta selecionada: " + contaSelecionada.getIdConta() + "- " + contaSelecionada.getNomeConta());
 
         System.out.println("Digite a descrição da transação:");
         String descricao = input.nextLine();
@@ -315,8 +307,7 @@ public class Main {
             return;
         }
 
-        transacaoService.registrarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(), descricao, valor, tipo);
-
+        facadeService.realizarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(), descricao, valor, tipo);
         System.out.println(Constantes.cadastroTransacao);
     }
 }

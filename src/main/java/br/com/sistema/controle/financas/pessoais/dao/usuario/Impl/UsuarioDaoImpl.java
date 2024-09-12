@@ -79,26 +79,4 @@ public class UsuarioDaoImpl implements UsuarioDao {
         }
         return usuario;
     }
-
-    public Integer obterIdUsuarioPorEmail(String email) {
-        String sql = "SELECT recuperar_id_usuario_por_email(?)";
-        Integer idUsuario = null;
-
-        try (Connection conn = DataSourceConfig.getConexao();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                idUsuario = rs.getInt(1);
-            }
-            rs.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return idUsuario;
-
-    }
 }

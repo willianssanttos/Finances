@@ -29,25 +29,17 @@ public class ContaService {
             if (tipoConta == null){
                 throw new IllegalArgumentException(Constantes.cadastroTipoConta);
             }
-
-            conta.getIdUsuario();
-            conta.getIdSaldo();
-            conta.getNomeConta();
-            conta.getSaldoConta();
             conta.setTipoConta(tipoConta);
-            conta.getDataDeposito();
 
-            ContaEntity novaConta = contaDao.criarConta(conta);
-
-            return novaConta;
+            return contaDao.criarConta(conta);
         } catch (Exception e){
             throw new ServiceException(Constantes.ErroCadastroConta, e);
         }
     }
 
-    public Double obterSaldo(Integer idConta){
+    public Double obterSaldo(Integer idUsuario){
         try {
-            return saldoDao.obterSaldoPorIdUsuario(idConta);
+            return saldoDao.obterSaldoPorIdUsuario(idUsuario);
         } catch (Exception e){
             throw new ServiceException(Constantes.ErrorRecuperarIdUsuario, e);
         }

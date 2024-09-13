@@ -1,7 +1,8 @@
-package br.com.sistema.controle.financas.pessoais.controller;
+package br.com.sistema.controle.financas.pessoais.View;
 
 import br.com.sistema.controle.financas.pessoais.facade.FacadeService;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
+import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
 import br.com.sistema.controle.financas.pessoais.service.usuario.UsuarioService;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
@@ -13,14 +14,16 @@ import br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarSenha;
 import static br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarNumeroCelular.formatarNumeroCelular;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-  static UsuarioService usuarioService = new UsuarioService();
-  static FacadeService facadeService = FacadeService.getInstance();
+    static UsuarioService usuarioService = new UsuarioService();
+    static FacadeService facadeService = FacadeService.getInstance();
 
     public static void main(String[] args) {
 
@@ -58,7 +61,7 @@ public class Main {
 
     public static void realizarLogin(Scanner input){
         while (true){
-            System.out.println("----LOGIN---\n");
+            System.out.println("----LOGIN----\n");
 
             System.out.println("Digite o E-MAIL: ");
             String email = input.nextLine();
@@ -81,7 +84,9 @@ public class Main {
     public static void usuarioLogado(Scanner input, Integer idUsuario) {
         while (true) {
             Double saldoAtual = facadeService.obterSaldoTotal(idUsuario);
-            System.out.println("SEU SALDO R$: " + saldoAtual);
+            System.out.println("\nSEU SALDO TOTAL R$: " + saldoAtual);
+
+            System.out.println("\nSUAS CONTAS");
 
             List<ContaEntity> contas = facadeService.obterContasPorUsuario(idUsuario);
 
@@ -96,9 +101,11 @@ public class Main {
                         " | Saldo R$ " + conta.getSaldoConta());
             }
 
-            System.out.println("(1) Adicionar conta");
+            System.out.println("\n(1) Adicionar Conta");
             System.out.println("(2) Realizar Transação");
-            System.out.println("(3) Deslogar");
+            //System.out.println("(3) Minha Contas");
+            System.out.println("(3) Extratos");
+            System.out.println("(4) Deslogar");
 
             String logadoUsuario = input.nextLine();
             if (!FuncoesUtil.ehNumero(logadoUsuario)) {
@@ -114,7 +121,12 @@ public class Main {
                 case 2:
                     registrarTransacao(input, idUsuario);
                     break;
+//                case 3:
+//                    break;
                 case 3:
+                    mostrarExtrato(input, idUsuario);
+                    break;
+                case 4:
                     return;
                 default:
                     System.out.println(Constantes.OpcaoInvalida);
@@ -282,13 +294,23 @@ public class Main {
                     " | Saldo R$ " + conta.getSaldoConta());
         }
 
-        System.out.println("\nDigite o número da conta:");
-        int escolha = Integer.parseInt(input.nextLine());
+        int escolha;
+        while (true){
+            System.out.println("\nDigite o número da conta:");
+            String escolhaStr = input.nextLine().trim();
 
+            if (!FuncoesUtil.ehNumero(escolhaStr)){
+                System.out.println("Opção invalida! Digite o numero correspondente a conta");
+                continue;
+            }
 
-        if (escolha < 1 || escolha > contas.size()){
-            System.err.println("Opção invalida.");
-            return;
+            escolha = Integer.parseInt(escolhaStr);
+            if (escolha < 1 || escolha > contas.size()){
+                System.err.println("Opção invalida.");
+                return;
+            }else {
+                break;
+            }
         }
 
         ContaEntity contaSelecionada = contas.get(escolha - 1);
@@ -296,18 +318,130 @@ public class Main {
         System.out.println("Digite a descrição da transação:");
         String descricao = input.nextLine();
 
-        System.out.println("Digite o valor da transação:");
-        Double valor = Double.parseDouble(input.nextLine());
+        System.out.println("Digite a categoria:");
+        String categoria = input.nextLine();
 
-        System.out.println("Digite o tipo de transação (1 para receitas, 2 para despesas):");
-        int tipo = Integer.parseInt(input.nextLine());
-
-        if (tipo != 1 && tipo != 2){
-            System.err.println(Constantes.tipoTransacao);
-            return;
+        Double valor;
+        while (true){
+            System.out.println("Digite o valor da transação:");
+            String valorStr = input.nextLine().trim();
+            if (!FuncoesUtil.ehNumero(valorStr)){
+                System.out.println("Digite so numeros.");
+            } else {
+                valor = Double.parseDouble(valorStr);
+                break;
+            }
         }
 
-        facadeService.realizarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(), descricao, valor, tipo);
+        int tipo;
+        while (true){
+            System.out.println("Digite o tipo de transação (1 para receitas, 2 para despesas):");
+            String tipoStr = input.nextLine().trim();
+
+            if(!FuncoesUtil.ehNumero(tipoStr)){
+                System.out.println(Constantes.tipoTransacao);
+            } else {
+                tipo = Integer.parseInt(tipoStr);
+                if (tipo !=1 && tipo != 2){
+                    System.err.println(Constantes.tipoTransacao);
+                    return;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        facadeService.realizarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(), descricao, categoria, valor, tipo);
         System.out.println(Constantes.cadastroTransacao);
+
+       while (true){
+           System.out.println("\nDeseja sair para o menu inicial? (s/n):");
+           String saida = input.nextLine().trim().toLowerCase();
+
+           if (saida.equals("s")){
+               return;
+           } else if (saida.equals("n")){
+               registrarTransacao(input,idUsuario);
+               break;
+           } else {
+               System.out.println(Constantes.erroSN + " para realizar nova transação.");
+           }
+       }
+   }
+    private static void mostrarExtrato(Scanner input, Integer idUsuario){
+        while (true){
+            //Pega o mês e o ano corrente por padrão
+            LocalDate hoje = LocalDate.now();
+            int mes = hoje.getMonthValue();
+            int ano = hoje.getYear();
+
+            System.out.println("\nDeseja filtrar por um período especifico? (s/n)");
+            String resposta = input.nextLine();
+
+            while (!resposta.equals("s") && !resposta.equals("n")){
+                System.out.println("Opção invalida! Digite 's' para filtrar ou 'n' para mostrar o extrato completo");
+                resposta = input.nextLine().trim().toLowerCase();
+            }
+
+            //Se o usuário quiser um periodo especifico, solicitar o mês e o ano
+            if (resposta.equalsIgnoreCase("s")){
+                System.out.println("Digite o mês (1-12):");
+                mes = Integer.parseInt(input.nextLine());
+
+                System.out.println("Digite o ano:");
+                ano = Integer.parseInt(input.nextLine());
+            }
+
+            List<ExtratoEntity> extratos = facadeService.obterExtratoPorMes(idUsuario, mes, ano);
+
+            if (extratos.isEmpty()){
+                System.out.println("Nenhuma transação registrada!");
+                return;
+            }
+
+            double totalGastos = 0;
+            double totalGanhos = 0;
+
+            // Formata a data
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            System.out.println("\nExtrato de Transações:");
+            for (ExtratoEntity extrato : extratos){
+                // Formata a data para dia/mês/ano
+                String dataFormatada = extrato.getDataMovimentacao().toLocalDateTime().toLocalDate().format(formatter);
+                String tipo = extrato.getTipoTransacao().equals("Ganho") ? "+" : "-";
+
+                // Exibe a transação com data e tipo de conta
+                System.out.println("Data: " + dataFormatada +"\n"+
+                        "| Conta: " + extrato.getNomeConta() +
+                        "| Tipo: " + extrato.getTipoConta() +
+                        "| Categoria: " + extrato.getCategoria() +
+                        "| Valor: " + tipo + extrato.getValor());
+
+                if (extrato.getTipoTransacao().equals("Ganho")){
+                    totalGanhos += extrato.getValor();
+                } else {
+                    totalGastos += extrato.getValor();
+                }
+            }
+            System.out.println("\nExtrato do mês:");
+            System.out.printf("Ganhos: R$ %.2f | Gastos: R$ %.2f\n", totalGanhos, totalGastos);
+
+            while (true){
+                System.out.println("\nDeseja sair para o menu inicial? (s/n):");
+                String saida = input.nextLine().trim().toLowerCase();
+
+                if (saida.equals("s")){
+                    return;
+                } else if (saida.equals("n")){
+                    break;
+                } else {
+                    System.out.println(Constantes.erroSN + " para permanecer no extrato.");
+                }
+            }
+        }
     }
+
+    // todo trigger que realiza o roolback da operação caso a mesma der algum erro
+    // todo realizar a implementação do cartao de credito
 }

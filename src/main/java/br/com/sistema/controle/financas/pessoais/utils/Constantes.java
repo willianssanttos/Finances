@@ -25,6 +25,9 @@ public class Constantes {
 
     public static final String ErroVerificarEmail = "O e-mail, não foi possivel ser verificado!";
     public static final String ErroCadastroConta = "Erro! Adicionar conta!";
+    public static final String erroSN = "Opção invalida! Digite 's', para sair ou 'n' para";
+
+
 
 
 ///Login ////
@@ -35,7 +38,7 @@ public class Constantes {
 
     public static final String usuarioNaoEncontrado = "Usuario não encontrado!";
 
-    public static final String tipoTransacao = "Tipo transação invalido! Valores permitidos. Use 1 para receitas e 2 para despesas!";
+    public static final String tipoTransacao = "Tipo transação invalido! Valores permitidos. Use 1 para receitas ou 2 para despesas!";
 
     public static final String cadastroTransacao = "Transação registrada com sucesso!";
 
@@ -44,6 +47,8 @@ public class Constantes {
     public static final String ErrorRecuperarIdUsuario = "Erro ao recuperar o id do usuario!";
 
     public static final String ErrorRecuperarContas = "Erro ao recuperar contas do usuario!";
+
+    public static final String ErrorRecuperarExtrato = "Erro ao recuperar extrato de transações!";
     ///status da conta////
     public static final String clienteEmail = "Digite o E-MAIL";
 

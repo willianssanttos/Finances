@@ -177,28 +177,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION buscar_tipo_conta_por_nome(p_nm_tipo_conta VARCHAR)
-RETURNS INT AS $$
-DECLARE
-    id_tipo_conta INT;
-BEGIN
-    SELECT nr_id_tipo_conta INTO id_tipo_conta
-    FROM tipo_conta
-    WHERE nm_tipo_conta = p_nm_tipo_conta;
-
-    IF id_tipo_conta IS NULL THEN
-        RAISE EXCEPTION 'Tipo de conta não encontrado';
-    END IF;
-
-    RETURN id_tipo_conta;
-END;
-$$ LANGUAGE plpgsql;
-
 -- Função para inserir transação
 CREATE OR REPLACE FUNCTION inserir_transacao(
     p_fk_nr_id_saldo INTEGER,
     p_fk_nr_id_conta INTEGER,
     p_ds_descricao VARCHAR,
+    p_ds_categoria VARCHAR,
     p_ds_valor DOUBLE PRECISION,
     p_ds_data_movimentacao TIMESTAMP,
     p_tipo INTEGER
@@ -213,8 +197,8 @@ BEGIN
     END IF;
 
     -- Insere a nova transação na tabela transacoes
-    INSERT INTO transacoes (fk_nr_id_saldo, fk_nr_id_conta, ds_descricao, ds_valor, ds_data_movimentacao, tipo)
-    VALUES (p_fk_nr_id_saldo, p_fk_nr_id_conta, p_ds_descricao, p_ds_valor, p_ds_data_movimentacao, p_tipo)
+    INSERT INTO transacoes (fk_nr_id_saldo, fk_nr_id_conta, ds_descricao, ds_categoria, ds_valor, ds_data_movimentacao, tipo)
+    VALUES (p_fk_nr_id_saldo, p_fk_nr_id_conta, p_ds_descricao, p_ds_categoria, p_ds_valor, p_ds_data_movimentacao, p_tipo)
     RETURNING nr_id_transacao INTO v_nr_id_transacao;
 
     -- Retorna o ID da transação recém-criada
@@ -277,5 +261,26 @@ BEGIN
 
     RETURN id_conta;
 END;
-$function$
-;
+$function$;
+
+CREATE OR REPLACE FUNCTION buscar_extrato_por_usuario(p_id_usuario INTEGER, p_mes INTEGER, p_ano INTEGER)
+RETURNS TABLE(
+    nm_nome VARCHAR,
+    ds_descricao VARCHAR,
+    ds_categoria VARCHAR,
+    ds_valor NUMERIC(10, 2),
+    ds_data_movimentacao TIMESTAMP,
+    tipo INTEGER,
+    nm_tipo_conta VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT c.nm_nome, t.ds_descricao, t.ds_categoria, t.ds_valor, t.ds_data_movimentacao, t.tipo, tc.nm_tipo_conta
+    FROM transacoes t
+    JOIN contas c ON t.fk_nr_id_conta = c.nr_id_conta
+    JOIN tipo_conta tc ON c.fk_nr_id_tipo_conta = tc.nr_id_tipo_conta
+    WHERE c.fk_nr_id_usuario = p_id_usuario
+    AND EXTRACT(MONTH FROM t.ds_data_movimentacao) = p_mes
+    AND EXTRACT(YEAR FROM t.ds_data_movimentacao) = p_ano;
+END;
+$$ LANGUAGE plpgsql;

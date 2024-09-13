@@ -2,6 +2,7 @@ package br.com.sistema.controle.financas.pessoais.facade;
 
 import br.com.sistema.controle.financas.pessoais.handler.ServiceException;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
+import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
 import br.com.sistema.controle.financas.pessoais.service.conta.ContaService;
 import br.com.sistema.controle.financas.pessoais.service.conta.TransacaoService;
@@ -54,10 +55,10 @@ public class FacadeService {
     }
 
     //Metodo para realizar transações com a logica centralizada
-    public void realizarTransacao(Integer idConta, Integer idSaldo, String descricao, Double valor, int tipo){
+    public void realizarTransacao(Integer idConta, Integer idSaldo, String descricao, String categoria, Double valor, int tipo){
         try {
             // Lógica para realizar transação
-            transacaoService.registrarTransacao(idConta, idSaldo, descricao, valor, tipo);
+            transacaoService.registrarTransacao(idConta, idSaldo, descricao, categoria, valor, tipo);
         } catch (Exception e){
             e.printStackTrace();
             throw new ServiceException(Constantes.ErrocadastroTransacao, e);
@@ -82,4 +83,12 @@ public class FacadeService {
         }
     }
 
+    public List<ExtratoEntity> obterExtratoPorMes(Integer idUsuario, int mes, int ano){
+        try {
+            return transacaoService.obterExtratoPorMes(idUsuario, mes, ano);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new ServiceException(Constantes.ErrorRecuperarExtrato, e);
+        }
+    }
 }

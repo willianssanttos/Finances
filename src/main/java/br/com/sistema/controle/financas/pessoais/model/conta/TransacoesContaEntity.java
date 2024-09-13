@@ -8,6 +8,7 @@ public class TransacoesContaEntity {
     private Integer idSaldo;
     private Integer idConta;
     private String Descricao;
+    private String Categoria;
     private Double Valor;
     private Timestamp dataMovimentacao;
     private int tipo;
@@ -34,6 +35,14 @@ public class TransacoesContaEntity {
 
     public void setDescricao(String descricao) {
         Descricao = descricao;
+    }
+
+    public String getCategoria() {
+        return Categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        Categoria = categoria;
     }
 
     public Double getValor() {

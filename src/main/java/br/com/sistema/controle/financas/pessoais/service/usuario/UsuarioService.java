@@ -25,10 +25,7 @@ public class UsuarioService {
 
     public UsuarioEntity criarUsuario(UsuarioEntity usuario) {
         try {
-//            usuario.getNomeUsuario();
-//            usuario.getEmailUsuario();
             usuario.setSenhaUsuario(PasswordSecurity.encriptarSenha(usuario.getSenhaUsuario()));
-//            usuario.getNumeroCelular();
 
             UsuarioEntity novoUsuario = usuarioDao.criarUsuario(usuario);
 
@@ -59,17 +56,13 @@ public class UsuarioService {
     public UsuarioEntity autenticarUsuario(String email, String senha) {
         try {
             UsuarioEntity usuario = usuarioDao.validarLogin(email);
-
-            if (usuario == null) {
-                return null;
-            }
             boolean senhaValida = PasswordSecurity.checkSenha(senha, usuario.getSenhaUsuario());
-            if (!senhaValida) {
+
+            if (!senhaValida){
                 return null;
             }
             return usuario;
         } catch (Exception e){
-            e.printStackTrace();
             return null;
         }
     }

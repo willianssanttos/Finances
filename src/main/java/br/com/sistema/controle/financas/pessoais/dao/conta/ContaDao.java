@@ -9,4 +9,7 @@ public interface ContaDao {
     ContaEntity criarConta(ContaEntity conta);
 
     List<ContaEntity> obterContasPorUsuario(Integer idUsuario);
+
+    public void excluirConta(Integer idConta);
+    public void editarConta(ContaEntity conta);
 }

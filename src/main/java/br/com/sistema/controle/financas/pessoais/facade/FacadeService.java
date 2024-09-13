@@ -2,6 +2,7 @@ package br.com.sistema.controle.financas.pessoais.facade;
 
 import br.com.sistema.controle.financas.pessoais.handler.ServiceException;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
+import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
 import br.com.sistema.controle.financas.pessoais.service.conta.ContaService;
 import br.com.sistema.controle.financas.pessoais.service.conta.TransacaoService;
@@ -32,7 +33,6 @@ public class FacadeService {
         return instance;
     }
 
-    //Metodo de criação de conta com a logica encapsulada
     public void criarUsuario(UsuarioEntity usuario) {
         try {
             usuarioService.criarUsuario(usuario);
@@ -42,10 +42,8 @@ public class FacadeService {
         }
     }
 
-    //Metodo de criação de conta com a logica encapsulada
     public void criarConta(ContaEntity conta){
         try {
-            // Lógica para criação de uma conta
             contaService.criarConta(conta);
         } catch (ServiceException e){
             e.printStackTrace();
@@ -53,11 +51,27 @@ public class FacadeService {
         }
     }
 
-    //Metodo para realizar transações com a logica centralizada
-    public void realizarTransacao(Integer idConta, Integer idSaldo, String descricao, Double valor, int tipo){
+    public void excluirConta(Integer idConta){
         try {
-            // Lógica para realizar transação
-            transacaoService.registrarTransacao(idConta, idSaldo, descricao, valor, tipo);
+            contaService.excluirConta(idConta);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new ServiceException(Constantes.ErroExcluir, e);
+        }
+    }
+
+    public void editarConta(ContaEntity conta){
+        try {
+            contaService.editarConta(conta);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new ServiceException(Constantes.ErroEditar, e);
+        }
+    }
+
+    public void realizarTransacao(Integer idConta, Integer idSaldo, String descricao, String categoria, Double valor, int tipo){
+        try {
+            transacaoService.registrarTransacao(idConta, idSaldo, descricao, categoria, valor, tipo);
         } catch (Exception e){
             e.printStackTrace();
             throw new ServiceException(Constantes.ErrocadastroTransacao, e);
@@ -82,4 +96,12 @@ public class FacadeService {
         }
     }
 
+    public List<ExtratoEntity> obterExtratoPorMes(Integer idUsuario, int mes, int ano){
+        try {
+            return transacaoService.obterExtratoPorMes(idUsuario, mes, ano);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new ServiceException(Constantes.ErrorRecuperarExtrato, e);
+        }
+    }
 }

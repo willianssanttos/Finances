@@ -1,7 +1,5 @@
 package br.com.sistema.controle.financas.pessoais.model.conta;
 
-import br.com.sistema.controle.financas.pessoais.enuns.TipoContaEnum;
-
 import java.sql.Timestamp;
 
 public class ContaEntity extends SaldoEntity{

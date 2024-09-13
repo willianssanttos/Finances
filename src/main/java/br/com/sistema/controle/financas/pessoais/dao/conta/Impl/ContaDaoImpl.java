@@ -63,5 +63,37 @@ public class ContaDaoImpl implements ContaDao {
         }
         return contas;
     }
+
+    public void editarConta(ContaEntity conta){
+        String sql = "SElECT atualizar_conta(?,?,?)";
+
+        try (Connection conn = DataSourceConfig.getConexao();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, conta.getIdConta());
+            ps.setString(2, conta.getNomeConta());
+            ps.setString(3, conta.getTipoConta());
+
+            ps.execute();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void excluirConta(Integer idConta){
+        String sql = "SELECT excluir_conta(?)";
+
+        try (Connection conn = DataSourceConfig.getConexao();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idConta);
+            ps.executeQuery();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
 }
 

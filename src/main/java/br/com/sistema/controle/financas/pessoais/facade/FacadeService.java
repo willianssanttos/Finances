@@ -13,6 +13,12 @@ import java.util.List;
 
 public class FacadeService {
 
+    /**
+     * FacadeService atua como uma fachada para encapsular a lógica das operações
+     * de usuário, contas e transações. Fornece uma interface simples para a
+     * manipulação dessas entidades, facilitando a chamada dos serviços.
+     */
+
     private static FacadeService instance;
     private final UsuarioService usuarioService;
     private final ContaService contaService;
@@ -33,17 +39,15 @@ public class FacadeService {
         return instance;
     }
 
-    //Metodo de criação de conta com a logica encapsulada
     public void criarUsuario(UsuarioEntity usuario) {
         try {
             usuarioService.criarUsuario(usuario);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServiceException(Constantes.ErroCadastroConta, e);
+            throw new ServiceException(Constantes.ErroCadastroUsuario, e);
         }
     }
 
-    //Metodo de criação de conta com a logica encapsulada
     public void criarConta(ContaEntity conta){
         try {
             // Lógica para criação de uma conta
@@ -54,10 +58,26 @@ public class FacadeService {
         }
     }
 
-    //Metodo para realizar transações com a logica centralizada
+    public void excluirConta(Integer idConta){
+        try {
+            contaService.excluirConta(idConta);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new ServiceException(Constantes.ErroExcluir, e);
+        }
+    }
+
+    public void editarConta(ContaEntity conta){
+        try {
+            contaService.editarConta(conta);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new ServiceException(Constantes.ErroEditar, e);
+        }
+    }
+
     public void realizarTransacao(Integer idConta, Integer idSaldo, String descricao, String categoria, Double valor, int tipo){
         try {
-            // Lógica para realizar transação
             transacaoService.registrarTransacao(idConta, idSaldo, descricao, categoria, valor, tipo);
         } catch (Exception e){
             e.printStackTrace();

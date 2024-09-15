@@ -48,6 +48,7 @@ CREATE TABLE Transacoes (
     fk_nr_id_saldo INT NOT NULL,
     fk_nr_id_conta INT NOT NULL,
     ds_descricao VARCHAR(255) NOT NULL,
+    ds_categoria VARCHAR(255) NOT NULL,
     ds_valor DECIMAL(10, 2) NOT NULL,
     ds_data_movimentacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tipo INT NOT NULL CHECK (tipo IN (1, 2)),

@@ -23,7 +23,7 @@ public class ContaService {
         this.tipoContaDao = new TipoContaImpl();
     }
 
-   public ContaEntity criarConta(ContaEntity conta){
+    public ContaEntity criarConta(ContaEntity conta){
         try {
             String tipoConta = tipoContaDao.obterTipoConta(conta.getTipoConta());
             if (tipoConta == null){
@@ -34,6 +34,22 @@ public class ContaService {
             return contaDao.criarConta(conta);
         } catch (Exception e){
             throw new ServiceException(Constantes.ErroCadastroConta, e);
+        }
+    }
+
+    public void editarConta(ContaEntity conta){
+        try {
+            contaDao.editarConta(conta);
+        } catch (Exception e){
+            throw  new ServiceException(Constantes.ErroEditar, e);
+        }
+    }
+
+    public void excluirConta(Integer idConta){
+        try {
+            contaDao.excluirConta(idConta);
+        } catch (Exception e){
+            throw new ServiceException(Constantes.ErroExcluir, e);
         }
     }
 

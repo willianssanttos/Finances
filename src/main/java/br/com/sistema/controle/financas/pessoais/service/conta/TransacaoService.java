@@ -3,7 +3,6 @@ package br.com.sistema.controle.financas.pessoais.service.conta;
 import br.com.sistema.controle.financas.pessoais.dao.conta.Impl.TransacaoContaDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.conta.TransacaoContaDao;
 import br.com.sistema.controle.financas.pessoais.handler.ServiceException;
-import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.TransacoesContaEntity;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;

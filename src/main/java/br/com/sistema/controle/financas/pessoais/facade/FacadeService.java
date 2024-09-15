@@ -39,7 +39,7 @@ public class FacadeService {
             usuarioService.criarUsuario(usuario);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServiceException(Constantes.ErroCadastroConta, e);
+            throw new ServiceException(Constantes.ErroCadastroUsuario, e);
         }
     }
 

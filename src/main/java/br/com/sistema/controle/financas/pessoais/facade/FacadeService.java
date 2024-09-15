@@ -33,6 +33,7 @@ public class FacadeService {
         return instance;
     }
 
+    //Metodo de criação de conta com a logica encapsulada
     public void criarUsuario(UsuarioEntity usuario) {
         try {
             usuarioService.criarUsuario(usuario);
@@ -42,8 +43,10 @@ public class FacadeService {
         }
     }
 
+    //Metodo de criação de conta com a logica encapsulada
     public void criarConta(ContaEntity conta){
         try {
+            // Lógica para criação de uma conta
             contaService.criarConta(conta);
         } catch (ServiceException e){
             e.printStackTrace();

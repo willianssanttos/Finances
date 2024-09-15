@@ -13,6 +13,12 @@ import java.util.List;
 
 public class FacadeService {
 
+    /**
+     * FacadeService atua como uma fachada para encapsular a lógica das operações
+     * de usuário, contas e transações. Fornece uma interface simples para a
+     * manipulação dessas entidades, facilitando a chamada dos serviços.
+     */
+
     private static FacadeService instance;
     private final UsuarioService usuarioService;
     private final ContaService contaService;
@@ -33,7 +39,6 @@ public class FacadeService {
         return instance;
     }
 
-    //Metodo de criação de conta com a logica encapsulada
     public void criarUsuario(UsuarioEntity usuario) {
         try {
             usuarioService.criarUsuario(usuario);
@@ -43,7 +48,6 @@ public class FacadeService {
         }
     }
 
-    //Metodo de criação de conta com a logica encapsulada
     public void criarConta(ContaEntity conta){
         try {
             // Lógica para criação de uma conta

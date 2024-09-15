@@ -284,3 +284,35 @@ BEGIN
     AND EXTRACT(YEAR FROM t.ds_data_movimentacao) = p_ano;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION excluir_conta(p_id_conta INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    -- Excluir todas as transações associadas à conta
+    DELETE FROM transacoes WHERE fk_nr_id_conta = p_id_conta;
+
+    -- Excluir a conta
+    DELETE FROM contas WHERE nr_id_conta = p_id_conta;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION atualizar_conta(
+    p_id_conta INTEGER,
+    p_novo_nome VARCHAR,
+    p_novo_tipo_conta VARCHAR
+)
+RETURNS VOID AS $$
+BEGIN
+    -- Verifica se a conta existe antes de atualizar
+    IF EXISTS (SELECT 1 FROM contas WHERE nr_id_conta = p_id_conta) THEN
+        -- Atualiza o nome e o tipo da conta
+        UPDATE contas
+        SET nm_nome = p_novo_nome,
+            fk_nr_id_tipo_conta = (SELECT nr_id_tipo_conta FROM tipo_conta WHERE nm_tipo_conta = p_novo_tipo_conta)
+        WHERE nr_id_conta = p_id_conta;
+    ELSE
+        -- Caso a conta não exista, lança uma exceção
+        RAISE EXCEPTION 'Conta com id % não encontrada', p_id_conta;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;

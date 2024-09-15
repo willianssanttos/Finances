@@ -233,108 +233,116 @@ public class Main {
     }
 
     public static void cadastrarConta(Scanner input, Integer idUsuario, Integer idSaldo) {
-        ContaEntity novaConta = new ContaEntity();
-
-        do {
-            String nomeConta = validarPrenchimentoEntrada(input,
-                    "Digite o Nome da Conta",
-                    "Nome não preenchido");
-            if (!ValidarNome.validarNome(nomeConta)){
-                System.err.println(Constantes.cadastroNomeConta);
-                continue;
-            }
-            novaConta.setNomeConta(nomeConta);
-            break;
-        } while (true);
-
-        do {
-            String saldo = validarPrenchimentoEntrada(input,
-                    "Digite seu saldo atual",
-                    "Saldo não preenchido");
-            if (!FuncoesUtil.ehNumero(saldo)){
-                System.err.println(Constantes.cadastroSaldo);
-                continue;
-            }
-            novaConta.setSaldoConta(Double.parseDouble(saldo));
-            break;
-        }while (true);
-
-        do {
-            String tipoConta = validarPrenchimentoEntrada(input,
-                    "Digite o Tipo da Conta",
-                    "Tipo Conta não preenchido");
-            if (!ValidarNome.validarNome(tipoConta)){
-                System.err.println(Constantes.cadastroTipoConta);
-                continue;
-            }
-            novaConta.setTipoConta(tipoConta);
-            break;
-        } while (true);
-
-        novaConta.setIdUsuario(idUsuario);
-        novaConta.setIdSaldo(idSaldo);
-        novaConta.setDataDeposito(Timestamp.valueOf(LocalDateTime.now()));
-
-        facadeService.criarConta(novaConta);
-        System.out.println(Constantes.cadastroConta);
-    }
-
-    public static void registrarTransacao(Scanner input, Integer idUsuario) {
-        List<ContaEntity> contas = facadeService.obterContasPorUsuario(idUsuario);
-
-        if (contas.isEmpty()) {
-            System.err.println(Constantes.contaNaoEncontrada);
-            return;
-        }
-
-        exibirContas(contas);
-        ContaEntity contaSelecionada = escolherConta(input, contas);
-
-        if (contaSelecionada == null) {
-            return;
-        }
-
-        System.out.println("Digite a descrição da transação:");
-        String descricao = input.nextLine();
-
-        System.out.println("Digite a categoria:");
-        String categoria = input.nextLine();
-
-        Double valor;
         while (true){
-            System.out.println("Digite o valor da transação:");
-            String valorStr = input.nextLine().trim();
-            if (!FuncoesUtil.ehNumero(valorStr)){
-                System.out.println("Digite so numeros.");
-            } else {
-                valor = Double.parseDouble(valorStr);
+            ContaEntity novaConta = new ContaEntity();
+
+            do {
+                String nomeConta = validarPrenchimentoEntrada(input,
+                        "Digite o Nome da Conta",
+                        "Nome não preenchido");
+                if (!ValidarNome.validarNome(nomeConta)){
+                    System.err.println(Constantes.cadastroNomeConta);
+                    continue;
+                }
+                novaConta.setNomeConta(nomeConta);
+                break;
+            } while (true);
+
+            do {
+                String saldo = validarPrenchimentoEntrada(input,
+                        "Digite seu saldo atual",
+                        "Saldo não preenchido");
+                if (!FuncoesUtil.ehNumero(saldo)){
+                    System.err.println(Constantes.cadastroSaldo);
+                    continue;
+                }
+                novaConta.setSaldoConta(Double.parseDouble(saldo));
+                break;
+            }while (true);
+
+            do {
+                String tipoConta = validarPrenchimentoEntrada(input,
+                        "Digite o Tipo da Conta",
+                        "Tipo Conta não preenchido");
+                if (!ValidarNome.validarNome(tipoConta)){
+                    System.err.println(Constantes.cadastroTipoConta);
+                    continue;
+                }
+                novaConta.setTipoConta(tipoConta);
+                break;
+            } while (true);
+
+            novaConta.setIdUsuario(idUsuario);
+            novaConta.setIdSaldo(idSaldo);
+            novaConta.setDataDeposito(Timestamp.valueOf(LocalDateTime.now()));
+
+            facadeService.criarConta(novaConta);
+            System.out.println(Constantes.cadastroConta);
+
+            if (!desejaSair(input)) {
                 break;
             }
         }
+    }
 
-        int tipo;
+    public static void registrarTransacao(Scanner input, Integer idUsuario) {
         while (true){
-            System.out.println("Digite o tipo de transação (1 para receitas, 2 para despesas):");
-            String tipoStr = input.nextLine().trim();
+            List<ContaEntity> contas = facadeService.obterContasPorUsuario(idUsuario);
 
-            if(!FuncoesUtil.ehNumero(tipoStr)){
-                System.out.println(Constantes.tipoTransacao);
-            } else {
-                tipo = Integer.parseInt(tipoStr);
-                if (tipo !=1 && tipo != 2){
-                    System.err.println(Constantes.tipoTransacao);
-                    return;
+            if (contas.isEmpty()) {
+                System.err.println(Constantes.contaNaoEncontrada);
+                return;
+            }
+
+            exibirContas(contas);
+            ContaEntity contaSelecionada = escolherConta(input, contas);
+
+            if (contaSelecionada == null) {
+                return;
+            }
+
+            System.out.println("Digite a descrição da transação:");
+            String descricao = input.nextLine();
+
+            System.out.println("Digite a categoria:");
+            String categoria = input.nextLine();
+
+            Double valor;
+            while (true){
+                System.out.println("Digite o valor da transação:");
+                String valorStr = input.nextLine().trim();
+                if (!FuncoesUtil.ehNumero(valorStr)){
+                    System.out.println("Digite so numeros.");
                 } else {
+                    valor = Double.parseDouble(valorStr);
                     break;
                 }
             }
-        }
 
-        facadeService.realizarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(), descricao, categoria, valor, tipo);
-        System.out.println(Constantes.cadastroTransacao);
+            int tipo;
+            while (true){
+                System.out.println("Digite o tipo de transação (1 para receitas, 2 para despesas):");
+                String tipoStr = input.nextLine().trim();
 
-        if (!desejaSair(input)) {
-            registrarTransacao(input, idUsuario);
+                if(!FuncoesUtil.ehNumero(tipoStr)){
+                    System.out.println(Constantes.tipoTransacao);
+                } else {
+                    tipo = Integer.parseInt(tipoStr);
+                    if (tipo !=1 && tipo != 2){
+                        System.err.println(Constantes.tipoTransacao);
+                        return;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            facadeService.realizarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(), descricao, categoria, valor, tipo);
+            System.out.println(Constantes.cadastroTransacao);
+
+            if (!desejaSair(input)) {
+                break;
+            }
         }
     }
 
@@ -380,7 +388,6 @@ public class Main {
             List<ExtratoEntity> extratos = facadeService.obterExtratoPorMes(idUsuario, mes, ano);
             if (extratos.isEmpty()) {
                 System.out.println("Nenhuma transação registrada nesta data informada!");
-                return;
             }
 
             Map<String, Double> ganhosPorCategoria = new HashMap<>();
@@ -429,7 +436,7 @@ public class Main {
 
         for (ExtratoEntity extrato : extratos) {
             String dataFormatada = extrato.getDataMovimentacao().toLocalDateTime().toLocalDate().format(formatter);
-            String tipo = extrato.getTipoTransacao().equals("Ganho") ? "+" : "-";
+            String tipo = extrato.getTipoTransacao().equals("Ganho") ? "+ " : "- ";
 
             System.out.println("Data: " + dataFormatada + "\n" +
                     "| Conta: " + extrato.getNomeConta() +
@@ -479,7 +486,7 @@ public class Main {
             } else if (saida.equals("n")) {
                 return true;
             } else {
-                System.out.println(Constantes.erroSN + " para permanecer no extrato.");
+                System.out.println(Constantes.erroSN);
             }
         }
     }

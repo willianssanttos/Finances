@@ -18,7 +18,7 @@ public class Constantes {
     public static final String ErroVerificarEmail = "O e-mail, não foi possivel ser verificado!";
     public static final String ErroCadastroConta = "Erro! Adicionar conta!";
     public static final String ContaEditada = "Conta editada com sucesso!";
-    public static final String erroSN = "Opção invalida! Digite 's', para sair ou 'n'";
+    public static final String erroSN = "Opção invalida! Digite 's', para sair ou 'n' para continuar";
     public static final String ErroEditar = "Erro ao editar conta";
     public static final String ErroExcluir = "Erro ao excluir conta";
 

@@ -287,12 +287,36 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION excluir_conta(p_id_conta INTEGER)
 RETURNS VOID AS $$
+DECLARE
+    v_id_saldo INTEGER;
+    v_total_saldo DOUBLE PRECISION;
 BEGIN
-    -- Excluir todas as transações associadas à conta
-    DELETE FROM transacoes WHERE fk_nr_id_conta = p_id_conta;
+    -- Buscar o id do saldo associado à conta
+    SELECT fk_nr_id_saldo INTO v_id_saldo
+    FROM contas
+    WHERE nr_id_conta = p_id_conta;
 
-    -- Excluir a conta
-    DELETE FROM contas WHERE nr_id_conta = p_id_conta;
+    -- Verificar se a conta existe
+    IF v_id_saldo IS NOT NULL THEN
+
+        -- Excluir todas as transações associadas à conta
+        DELETE FROM transacoes WHERE fk_nr_id_conta = p_id_conta;
+
+        -- Excluir a conta
+        DELETE FROM contas WHERE nr_id_conta = p_id_conta;
+
+        -- Recalcular o saldo total das contas restantes associadas ao saldo
+        SELECT COALESCE(SUM(ds_saldo), 0) INTO v_total_saldo
+        FROM contas
+        WHERE fk_nr_id_saldo = v_id_saldo;
+
+        -- Atualizar o saldo na tabela saldo
+        UPDATE saldo
+        SET ds_saldo_atual = v_total_saldo, data_atualizacao = CURRENT_TIMESTAMP
+        WHERE nr_id_saldo = v_id_saldo;
+
+    END IF;
+
 END;
 $$ LANGUAGE plpgsql;
 

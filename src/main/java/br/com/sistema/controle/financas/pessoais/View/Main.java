@@ -260,17 +260,36 @@ public class Main {
                 break;
             }while (true);
 
-            do {
-                String tipoConta = validarPrenchimentoEntrada(input,
-                        "Digite o Tipo da Conta",
-                        "Tipo Conta não preenchido");
-                if (!ValidarNome.validarNome(tipoConta)){
-                    System.err.println(Constantes.cadastroTipoConta);
-                    continue;
+            // Carregar e exibir tipos de contas a partir do banco de dados
+            List<String> tiposConta = facadeService.obterTiposConta();
+            if (tiposConta.isEmpty()) {
+                System.err.println("Nenhum tipo de conta encontrado!");
+                return;
+            }
+
+            System.out.println("Selecione o Tipo da Conta:");
+            for (int i = 0; i < tiposConta.size(); i++) {
+                System.out.println((i + 1) + ". " + tiposConta.get(i));
+            }
+
+            // Validação e escolha do tipo de conta
+            int escolhaTipo;
+            while (true) {
+                String escolhaStr = validarPrenchimentoEntrada(input,
+                        "Digite o número do tipo de conta:",
+                        "Numero não escolhido");
+                if (!FuncoesUtil.ehNumero(escolhaStr)) {
+                    System.out.println("Opção inválida! Digite um número válido.");
+                } else {
+                    escolhaTipo = Integer.parseInt(escolhaStr);
+                    if (escolhaTipo < 1 || escolhaTipo > tiposConta.size()) {
+                        System.err.println("Opção inválida.");
+                    } else {
+                        novaConta.setTipoConta(tiposConta.get(escolhaTipo - 1));
+                        break;
+                    }
                 }
-                novaConta.setTipoConta(tipoConta);
-                break;
-            } while (true);
+            }
 
             novaConta.setIdUsuario(idUsuario);
             novaConta.setIdSaldo(idSaldo);

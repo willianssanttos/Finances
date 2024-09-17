@@ -2,7 +2,7 @@ package br.com.sistema.controle.financas.pessoais.service.conta;
 
 import br.com.sistema.controle.financas.pessoais.dao.conta.Impl.TransacaoContaDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.conta.TransacaoContaDao;
-import br.com.sistema.controle.financas.pessoais.handler.ServiceException;
+import br.com.sistema.controle.financas.pessoais.exception.ServiceException;
 import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.TransacoesContaEntity;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
@@ -18,7 +18,6 @@ public class TransacaoService {
     }
 
     public void registrarTransacao(Integer idConta, Integer idSaldo, String descricao, String categoria, Double valor, int tipo){
-        try {
             if (tipo != 1 && tipo != 2){
                 throw new IllegalArgumentException(Constantes.tipoTransacao);
             }
@@ -33,17 +32,9 @@ public class TransacaoService {
             novaTransacao.setDataMovimentacao(Timestamp.valueOf(LocalDateTime.now()));
 
             transacaoContaDao.inserirTransacao(novaTransacao);
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new ServiceException(Constantes.ErrocadastroTransacao, e);
-        }
     }
 
     public List<ExtratoEntity> obterExtratoPorMes(Integer idUsuario, int mes, int ano){
-        try {
             return transacaoContaDao.obterExtratoPorMes(idUsuario, mes, ano);
-        } catch (Exception e){
-            throw new ServiceException(Constantes.ErrorRecuperarExtrato, e);
-        }
     }
 }

@@ -4,7 +4,7 @@ import br.com.sistema.controle.financas.pessoais.dao.conta.Impl.SaldoDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.conta.SaldoDao;
 import br.com.sistema.controle.financas.pessoais.dao.usuario.Impl.UsuarioDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.usuario.UsuarioDao;
-import br.com.sistema.controle.financas.pessoais.handler.ServiceException;
+import br.com.sistema.controle.financas.pessoais.exception.ServiceException;
 import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
 import br.com.sistema.controle.financas.pessoais.security.PasswordSecurity;
@@ -24,7 +24,6 @@ public class UsuarioService {
     }
 
     public UsuarioEntity criarUsuario(UsuarioEntity usuario) {
-        try {
             usuario.setSenhaUsuario(PasswordSecurity.encriptarSenha(usuario.getSenhaUsuario()));
 
             UsuarioEntity novoUsuario = usuarioDao.criarUsuario(usuario);
@@ -38,10 +37,6 @@ public class UsuarioService {
                 saldoDao.inserirSaldo(inserirSaldo);
             }
             return novoUsuario;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceException(Constantes.ErroCadastroUsuario, e);
-        }
     }
 
     public Boolean emailExiste(String email) {

@@ -1,6 +1,6 @@
 package br.com.sistema.controle.financas.pessoais.facade;
 
-import br.com.sistema.controle.financas.pessoais.handler.ServiceException;
+import br.com.sistema.controle.financas.pessoais.exception.ServiceException;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
@@ -48,9 +48,18 @@ public class FacadeService {
         }
     }
 
+    public List<String> obterTiposConta() {
+        try {
+            return contaService.obterTodosTiposConta();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(Constantes.cadastroTipoConta, e);
+        }
+    }
+
+
     public void criarConta(ContaEntity conta){
         try {
-            // Lógica para criação de uma conta
             contaService.criarConta(conta);
         } catch (ServiceException e){
             e.printStackTrace();

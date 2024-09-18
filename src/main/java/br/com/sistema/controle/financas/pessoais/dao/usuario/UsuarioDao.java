@@ -6,5 +6,5 @@ public interface UsuarioDao {
 
     UsuarioEntity criarUsuario(UsuarioEntity usuario);
     boolean verificarEmailExistente(String email);
-    public UsuarioEntity validarLogin(String email);
+    UsuarioEntity validarLogin(String email);
 }

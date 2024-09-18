@@ -566,20 +566,47 @@ public class Main {
 
     private static void editarConta(Scanner input, ContaEntity contaSelecionada) {
         System.out.println("Editar Conta:");
+
+        // Nome da conta
         System.out.println("Nome atual: " + contaSelecionada.getNomeConta());
         System.out.println("Digite o novo nome da conta (ou aperte Enter para manter o nome atual):");
         String novoNome = input.nextLine();
-        if (!novoNome.isBlank()){
+        if (!novoNome.isBlank()) {
             contaSelecionada.setNomeConta(novoNome);
         }
 
+        // Tipo da conta
         System.out.println("Tipo atual: " + contaSelecionada.getTipoConta());
-        System.out.println("Digite o novo tipo da conta (ou aperte Enter para manter o nome atual):");
-        String novoTipo = input.nextLine();
-        if (!novoTipo.isBlank()){
-            contaSelecionada.setTipoConta(novoTipo);
+        System.out.println("Digite o número do novo tipo de conta (ou aperte Enter para manter o tipo atual):");
+
+        // Carregar e exibir tipos de contas a partir do banco de dados
+        List<String> tiposConta = facadeService.obterTiposConta();
+        if (tiposConta.isEmpty()) {
+            System.err.println("Nenhum tipo de conta encontrado!");
+            return;
         }
 
+        // Exibir os tipos de conta disponíveis
+        for (int i = 0; i < tiposConta.size(); i++) {
+            System.out.println((i + 1) + ". " + tiposConta.get(i));
+        }
+
+        // Entrada para novo tipo de conta (ou manter o atual)
+        String escolhaStr = input.nextLine();
+        if (!escolhaStr.isBlank()) {
+            if (FuncoesUtil.ehNumero(escolhaStr)) {
+                int escolhaTipo = Integer.parseInt(escolhaStr);
+                if (escolhaTipo >= 1 && escolhaTipo <= tiposConta.size()) {
+                    contaSelecionada.setTipoConta(tiposConta.get(escolhaTipo - 1));
+                } else {
+                    System.err.println("Opção inválida. Mantendo o tipo de conta atual.");
+                }
+            } else {
+                System.err.println("Opção inválida! Mantendo o tipo de conta atual.");
+            }
+        }
+
+        // Chama o serviço para editar a conta
         facadeService.editarConta(contaSelecionada);
         System.out.println(Constantes.ContaEditada);
     }

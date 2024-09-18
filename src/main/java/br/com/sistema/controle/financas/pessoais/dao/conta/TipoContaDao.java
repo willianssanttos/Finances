@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface TipoContaDao {
 
-    public List<String> obterTiposConta();
+     List<String> obterTiposConta();
 }

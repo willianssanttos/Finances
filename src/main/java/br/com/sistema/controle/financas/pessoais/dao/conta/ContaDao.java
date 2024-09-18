@@ -10,6 +10,6 @@ public interface ContaDao {
 
     List<ContaEntity> obterContasPorUsuario(Integer idUsuario);
 
-    public void excluirConta(Integer idConta);
-    public void editarConta(ContaEntity conta);
+    void excluirConta(Integer idConta);
+    void editarConta(ContaEntity conta);
 }

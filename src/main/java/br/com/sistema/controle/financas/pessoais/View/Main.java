@@ -571,7 +571,9 @@ public class Main {
         System.out.println("Nome atual: " + contaSelecionada.getNomeConta());
         System.out.println("Digite o novo nome da conta (ou aperte Enter para manter o nome atual):");
         String novoNome = input.nextLine();
-        if (!novoNome.isBlank()) {
+        if (!ValidarNome.validarNome(novoNome)){
+            System.err.println("Nome inválido! Nome não e permitido com números.");
+        } else if (!novoNome.isBlank()) {
             contaSelecionada.setNomeConta(novoNome);
         }
 

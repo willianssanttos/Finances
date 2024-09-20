@@ -238,7 +238,7 @@ public class Main {
 
             do {
                 String nomeConta = validarPrenchimentoEntrada(input,
-                        "Digite o Nome da Conta",
+                        "Digite o Nome do Banco",
                         "Nome não preenchido");
                 if (!ValidarNome.validarNome(nomeConta)){
                     System.err.println(Constantes.cadastroNomeConta);
@@ -276,7 +276,7 @@ public class Main {
             int escolhaTipo;
             while (true) {
                 String escolhaStr = validarPrenchimentoEntrada(input,
-                        "Digite o número do tipo de conta:",
+                        "Selecione o tipo de conta:",
                         "Numero não escolhido");
                 if (!FuncoesUtil.ehNumero(escolhaStr)) {
                     System.out.println("Opção inválida! Digite um número válido.");
@@ -380,7 +380,7 @@ public class Main {
     private static ContaEntity escolherConta(Scanner input, List<ContaEntity> contas) {
         int escolha;
         while (true) {
-            System.out.println("\nDigite o número da conta:");
+            System.out.println("\nSelecione a conta:");
             String escolhaStr = input.nextLine().trim();
 
             if (!FuncoesUtil.ehNumero(escolhaStr)) {

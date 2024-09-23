@@ -18,23 +18,31 @@ public class TransacaoService {
     }
 
     public void registrarTransacao(Integer idConta, Integer idSaldo, String descricao, String categoria, Double valor, int tipo){
-            if (tipo != 1 && tipo != 2){
-                throw new IllegalArgumentException(Constantes.tipoTransacao);
-            }
+           try {
+               if (tipo != 1 && tipo != 2){
+                   throw new IllegalArgumentException(Constantes.tipoTransacao);
+               }
 
-            TransacoesContaEntity novaTransacao = new TransacoesContaEntity();
-            novaTransacao.setIdConta(idConta);
-            novaTransacao.setIdSaldo(idSaldo);
-            novaTransacao.setDescricao(descricao);
-            novaTransacao.setCategoria(categoria);
-            novaTransacao.setValor(valor);
-            novaTransacao.setTipo(tipo);
-            novaTransacao.setDataMovimentacao(Timestamp.valueOf(LocalDateTime.now()));
+               TransacoesContaEntity novaTransacao = new TransacoesContaEntity();
+               novaTransacao.setIdConta(idConta);
+               novaTransacao.setIdSaldo(idSaldo);
+               novaTransacao.setDescricao(descricao);
+               novaTransacao.setCategoria(categoria);
+               novaTransacao.setValor(valor);
+               novaTransacao.setTipo(tipo);
+               novaTransacao.setDataMovimentacao(Timestamp.valueOf(LocalDateTime.now()));
 
-            transacaoContaDao.inserirTransacao(novaTransacao);
+               transacaoContaDao.inserirTransacao(novaTransacao);
+           } catch (Exception e){
+               throw new ServiceException(Constantes.ErrocadastroTransacao, e);
+           }
     }
 
     public List<ExtratoEntity> obterExtratoPorMes(Integer idUsuario, int mes, int ano){
+        try {
             return transacaoContaDao.obterExtratoPorMes(idUsuario, mes, ano);
+        } catch (Exception e){
+            throw new ServiceException(Constantes.ErrorRecuperarExtrato, e);
+        }
     }
 }

@@ -29,7 +29,7 @@ public class Constantes {
     public static final String tipoTransacao = "Tipo transação invalido! Valores permitidos. Use 1 para receitas ou 2 para despesas!";
     public static final String cadastroTransacao = "Transação registrada com sucesso!";
     public static final String ErrocadastroTransacao = "Erro ao realizar registro transação!";
-    public static final String ErrorRecuperarIdUsuario = "Erro ao recuperar o id do usuario!";
+    public static final String ErrorRecuperarSaldo = "Erro ao recuperar o id do usuario, para obter o saldo!";
     public static final String ErrorRecuperarContas = "Erro ao recuperar contas do usuario!";
     public static final String ErrorRecuperarExtrato = "Erro ao recuperar extrato de transações!";
 

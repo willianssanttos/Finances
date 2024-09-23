@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
-
-    static UsuarioService usuarioService = new UsuarioService();
     static FacadeService facadeService = FacadeService.getInstance();
 
     public static void main(String[] args) {
@@ -70,7 +68,7 @@ public class Main {
             System.out.println("Digite a Senha: ");
             String senha = input.nextLine();
 
-            UsuarioEntity usuario = usuarioService.autenticarUsuario(email, senha);
+            UsuarioEntity usuario = facadeService.autenticarUsuario(email, senha);
 
             if (usuario == null){
                 System.err.println(Constantes.erroLoginConta);
@@ -159,7 +157,7 @@ public class Main {
                 continue;
             }
 
-            Boolean emailExiste = usuarioService.emailExiste(emailUsuario);
+            Boolean emailExiste = facadeService.emailExiste(emailUsuario);
             if (Boolean.TRUE.equals(emailExiste)) {
                 System.err.println(Constantes.EmailJaCadastrado);
                 continue;

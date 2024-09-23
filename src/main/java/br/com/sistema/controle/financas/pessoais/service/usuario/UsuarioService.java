@@ -24,6 +24,7 @@ public class UsuarioService {
     }
 
     public UsuarioEntity criarUsuario(UsuarioEntity usuario) {
+        try {
             usuario.setSenhaUsuario(PasswordSecurity.encriptarSenha(usuario.getSenhaUsuario()));
 
             UsuarioEntity novoUsuario = usuarioDao.criarUsuario(usuario);
@@ -37,13 +38,15 @@ public class UsuarioService {
                 saldoDao.inserirSaldo(inserirSaldo);
             }
             return novoUsuario;
+        } catch (Exception e){
+            throw new ServiceException(Constantes.ErroCadastroUsuario, e);
+        }
     }
 
     public Boolean emailExiste(String email) {
         try {
             return usuarioDao.verificarEmailExistente(email);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ServiceException(Constantes.ErroVerificarEmail, e);
         }
     }

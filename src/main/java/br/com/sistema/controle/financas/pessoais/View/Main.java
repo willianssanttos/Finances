@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
-
-    static UsuarioService usuarioService = new UsuarioService();
     static FacadeService facadeService = FacadeService.getInstance();
 
     public static void main(String[] args) {
@@ -70,7 +68,7 @@ public class Main {
             System.out.println("Digite a Senha: ");
             String senha = input.nextLine();
 
-            UsuarioEntity usuario = usuarioService.autenticarUsuario(email, senha);
+            UsuarioEntity usuario = facadeService.autenticarUsuario(email, senha);
 
             if (usuario == null){
                 System.err.println(Constantes.erroLoginConta);
@@ -159,7 +157,7 @@ public class Main {
                 continue;
             }
 
-            Boolean emailExiste = usuarioService.emailExiste(emailUsuario);
+            Boolean emailExiste = facadeService.emailExiste(emailUsuario);
             if (Boolean.TRUE.equals(emailExiste)) {
                 System.err.println(Constantes.EmailJaCadastrado);
                 continue;
@@ -238,7 +236,7 @@ public class Main {
 
             do {
                 String nomeConta = validarPrenchimentoEntrada(input,
-                        "Digite o Nome da Conta",
+                        "Digite o Nome do Banco",
                         "Nome não preenchido");
                 if (!ValidarNome.validarNome(nomeConta)){
                     System.err.println(Constantes.cadastroNomeConta);
@@ -276,7 +274,7 @@ public class Main {
             int escolhaTipo;
             while (true) {
                 String escolhaStr = validarPrenchimentoEntrada(input,
-                        "Digite o número do tipo de conta:",
+                        "Selecione o tipo de conta:",
                         "Numero não escolhido");
                 if (!FuncoesUtil.ehNumero(escolhaStr)) {
                     System.out.println("Opção inválida! Digite um número válido.");
@@ -380,7 +378,7 @@ public class Main {
     private static ContaEntity escolherConta(Scanner input, List<ContaEntity> contas) {
         int escolha;
         while (true) {
-            System.out.println("\nDigite o número da conta:");
+            System.out.println("\nSelecione a conta:");
             String escolhaStr = input.nextLine().trim();
 
             if (!FuncoesUtil.ehNumero(escolhaStr)) {

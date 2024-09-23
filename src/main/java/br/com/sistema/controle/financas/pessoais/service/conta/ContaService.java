@@ -24,26 +24,50 @@ public class ContaService {
     }
 
     public ContaEntity criarConta(ContaEntity conta){
+        try {
             return contaDao.criarConta(conta);
+        } catch (Exception e){
+            throw new ServiceException(Constantes.ErroCadastroConta, e);
+        }
     }
 
     public List<String> obterTodosTiposConta() {
+        try {
             return tipoContaDao.obterTiposConta();
+        } catch (Exception e){
+            throw new ServiceException(Constantes.cadastroTipoConta, e);
+        }
     }
 
     public void editarConta(ContaEntity conta){
+        try {
             contaDao.editarConta(conta);
+        } catch (Exception e){
+            throw new ServiceException(Constantes.ErroEditar, e);
+        }
     }
 
     public void excluirConta(Integer idConta){
+        try {
             contaDao.excluirConta(idConta);
+        } catch (Exception e){
+            throw new ServiceException(Constantes.ErroExcluir, e);
+        }
     }
 
     public Double obterSaldo(Integer idUsuario){
+        try {
             return saldoDao.obterSaldoPorIdUsuario(idUsuario);
+        } catch (Exception e){
+            throw new ServiceException(Constantes.ErrorRecuperarSaldo, e);
+        }
     }
 
     public List<ContaEntity> obterContasPorIdUsuario(Integer idUsuario){
+        try {
             return contaDao.obterContasPorUsuario(idUsuario);
+        } catch (Exception e){
+            throw new ServiceException(Constantes.ErrorRecuperarContas, e);
+        }
     }
 }

@@ -43,16 +43,31 @@ public class FacadeService {
         try {
             usuarioService.criarUsuario(usuario);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ServiceException(Constantes.ErroCadastroUsuario, e);
         }
     }
+
+    public UsuarioEntity autenticarUsuario(String email, String senha) {
+        try {
+            return usuarioService.autenticarUsuario(email, senha);
+        } catch (Exception e) {
+            throw new ServiceException(Constantes.erroLoginConta, e);
+        }
+    }
+
+    public Boolean emailExiste(String email) {
+        try {
+            return usuarioService.emailExiste(email);
+        } catch (Exception e) {
+            throw new ServiceException(Constantes.ErroVerificarEmail, e);
+        }
+    }
+
 
     public List<String> obterTiposConta() {
         try {
             return contaService.obterTodosTiposConta();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ServiceException(Constantes.cadastroTipoConta, e);
         }
     }
@@ -62,7 +77,6 @@ public class FacadeService {
         try {
             contaService.criarConta(conta);
         } catch (ServiceException e){
-            e.printStackTrace();
             throw new ServiceException(Constantes.ErroCadastroConta, e);
         }
     }
@@ -71,7 +85,6 @@ public class FacadeService {
         try {
             contaService.excluirConta(idConta);
         } catch (Exception e){
-            e.printStackTrace();
             throw new ServiceException(Constantes.ErroExcluir, e);
         }
     }
@@ -80,7 +93,6 @@ public class FacadeService {
         try {
             contaService.editarConta(conta);
         } catch (Exception e){
-            e.printStackTrace();
             throw new ServiceException(Constantes.ErroEditar, e);
         }
     }
@@ -89,7 +101,6 @@ public class FacadeService {
         try {
             transacaoService.registrarTransacao(idConta, idSaldo, descricao, categoria, valor, tipo);
         } catch (Exception e){
-            e.printStackTrace();
             throw new ServiceException(Constantes.ErrocadastroTransacao, e);
         }
     }
@@ -98,8 +109,7 @@ public class FacadeService {
         try {
             return contaService.obterSaldo(idUsuario);
         } catch (Exception e){
-            e.printStackTrace();
-            throw new ServiceException(Constantes.ErrorRecuperarIdUsuario, e);
+            throw new ServiceException(Constantes.ErrorRecuperarSaldo, e);
         }
     }
 
@@ -107,7 +117,6 @@ public class FacadeService {
         try {
             return contaService.obterContasPorIdUsuario(idUsuario);
         } catch (Exception e){
-            e.printStackTrace();
             throw new ServiceException(Constantes.ErrorRecuperarContas, e);
         }
     }
@@ -116,7 +125,6 @@ public class FacadeService {
         try {
             return transacaoService.obterExtratoPorMes(idUsuario, mes, ano);
         } catch (Exception e){
-            e.printStackTrace();
             throw new ServiceException(Constantes.ErrorRecuperarExtrato, e);
         }
     }

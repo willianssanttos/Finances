@@ -5,7 +5,6 @@ import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.TotaisGanhosGastosEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
-import br.com.sistema.controle.financas.pessoais.service.usuario.UsuarioService;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
 import br.com.sistema.controle.financas.pessoais.utils.FuncoesUtil;
 import br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarEmail;

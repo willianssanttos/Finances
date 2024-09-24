@@ -12,10 +12,8 @@ public class DataSourceConfig {
 
     public static Connection getConexao(){
         try {
-            return
-             DriverManager.getConnection(url, user, password);
-        }
-        catch (SQLException e){
+            return DriverManager.getConnection(url, user, password);
+        } catch (SQLException e){
             System.err.println("Erro ao tentar conectar ao servidor.");
             e.printStackTrace();
             return null;

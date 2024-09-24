@@ -1,11 +1,11 @@
-package br.com.sistema.controle.financas.pessoais.View;
+package br.com.sistema.controle.financas.pessoais.view;
 
+import br.com.sistema.controle.financas.pessoais.Enum.CategoriaEnum;
 import br.com.sistema.controle.financas.pessoais.facade.FacadeService;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.TotaisGanhosGastosEntity;
 import br.com.sistema.controle.financas.pessoais.model.usuario.UsuarioEntity;
-import br.com.sistema.controle.financas.pessoais.service.usuario.UsuarioService;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
 import br.com.sistema.controle.financas.pessoais.utils.FuncoesUtil;
 import br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarEmail;
@@ -321,8 +321,7 @@ public class Main {
             System.out.println("Digite a descrição da transação:");
             String descricao = input.nextLine();
 
-            System.out.println("Digite a categoria:");
-            String categoria = input.nextLine();
+            CategoriaEnum categoriaSelecionada = escolhaCategoria(input);
 
             Double valor;
             while (true){
@@ -354,11 +353,37 @@ public class Main {
                 }
             }
 
-            facadeService.realizarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(), descricao, categoria, valor, tipo);
+            facadeService.realizarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(),
+                                            descricao, categoriaSelecionada.name(), valor, tipo);
             System.out.println(Constantes.cadastroTransacao);
 
             if (!desejaSair(input)) {
                 break;
+            }
+        }
+    }
+
+    public static CategoriaEnum escolhaCategoria(Scanner input){
+        CategoriaEnum[] categoriaEnums = CategoriaEnum.values();
+
+        System.out.println("Escolha uma categoria:");
+        for (int i = 0; i < categoriaEnums.length; i++){
+            System.out.printf("%d - %s%n", i + 1, categoriaEnums[i].name());
+        }
+
+        int escolha;
+        while (true){
+            System.out.println("Escolha á categoria:");
+            String escolhaStr = input.nextLine().trim();
+            if (FuncoesUtil.ehNumero(escolhaStr)){
+                escolha = Integer.parseInt(escolhaStr);
+                if (escolha > 0 && escolha <= categoriaEnums.length){
+                    return categoriaEnums[escolha - 1];
+                } else {
+                    System.err.println("Escolha invalida. Tente novamente.");
+                }
+            } else {
+                System.err.println("Digite apenas números.");
             }
         }
     }
@@ -458,6 +483,7 @@ public class Main {
             System.out.println("Data: " + dataFormatada + "\n" +
                     "| Conta: " + extrato.getNomeConta() +
                     "| Tipo: " + extrato.getTipoConta() +
+                    "| Descrição: " + extrato.getDescricao() +
                     "| Categoria: " + extrato.getCategoria() +
                     "| Valor: " + tipo + extrato.getValor());
 

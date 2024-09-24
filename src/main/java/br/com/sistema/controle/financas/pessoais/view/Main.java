@@ -1,4 +1,4 @@
-package br.com.sistema.controle.financas.pessoais.View;
+package br.com.sistema.controle.financas.pessoais.view;
 
 import br.com.sistema.controle.financas.pessoais.Enum.CategoriaEnum;
 import br.com.sistema.controle.financas.pessoais.facade.FacadeService;

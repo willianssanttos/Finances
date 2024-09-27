@@ -1,14 +1,20 @@
-package br.com.sistema.controle.financas.pessoais.dao.conta.Impl;
+package br.com.sistema.controle.financas.pessoais.dao.conta.impl;
 
 import br.com.sistema.controle.financas.pessoais.configuration.DataSourceConfig;
 import br.com.sistema.controle.financas.pessoais.dao.conta.SaldoDao;
 import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;
+import br.com.sistema.controle.financas.pessoais.utils.Constantes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
 public class SaldoDaoImpl implements SaldoDao {
+    private static final Logger logger = LoggerFactory.getLogger(SaldoDaoImpl.class);
 
     public SaldoEntity inserirSaldo(SaldoEntity saldo){
+        logger.debug(Constantes.DebugRegistroProcesso + saldo);
+
         String sql = "SElECT inserir_saldo(?,?,?)";
 
         try (Connection conn = DataSourceConfig.getConexao();
@@ -25,17 +31,19 @@ public class SaldoDaoImpl implements SaldoDao {
             }
             rs.close();
 
+            logger.info(Constantes.InfoRegistrar + saldo);
         } catch (SQLException e){
-            e.printStackTrace();
+           logger.error(Constantes.ErroRegistrarNoServidor);
         }
-
         return saldo;
     }
 
     public Double obterSaldoPorIdUsuario(Integer idUsuario) {
+        logger.debug(Constantes.DebugBuscarProcesso + idUsuario);
+
         String sql = "SELECT obter_saldo_total(?)";
 
-        Double saldoTotal = 0.0;
+        double saldoTotal = 0.0;
         try (Connection conn = DataSourceConfig.getConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -47,8 +55,9 @@ public class SaldoDaoImpl implements SaldoDao {
             }
             rs.close();
 
+            logger.info(Constantes.InfoBuscar + idUsuario);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(Constantes.ErroBuscarRegistroNoServidor);
         }
         return saldoTotal;
     }

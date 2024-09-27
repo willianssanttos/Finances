@@ -1,6 +1,7 @@
 package br.com.sistema.controle.financas.pessoais.view;
 
 import br.com.sistema.controle.financas.pessoais.Enum.CategoriaEnum;
+import br.com.sistema.controle.financas.pessoais.dao.usuario.impl.UsuarioDaoImpl;
 import br.com.sistema.controle.financas.pessoais.facade.FacadeService;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
@@ -12,6 +13,9 @@ import br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarEmail;
 import br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarNome;
 import br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarNumeroCelular;
 import br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarSenha;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static br.com.sistema.controle.financas.pessoais.utils.validacoes.ValidarNumeroCelular.formatarNumeroCelular;
 
 import java.sql.Timestamp;
@@ -24,11 +28,15 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
+
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioDaoImpl.class);
+
     static FacadeService facadeService = FacadeService.getInstance();
 
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
+        logger.info("Aplicação iniciada");
 
         while (true) {
             System.out.println(Constantes.bemVindo);

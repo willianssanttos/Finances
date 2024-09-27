@@ -1,16 +1,22 @@
-package br.com.sistema.controle.financas.pessoais.dao.conta.Impl;
+package br.com.sistema.controle.financas.pessoais.dao.conta.impl;
 
 import br.com.sistema.controle.financas.pessoais.configuration.DataSourceConfig;
 import br.com.sistema.controle.financas.pessoais.dao.conta.TransacaoContaDao;
 import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.TransacoesContaEntity;
+import br.com.sistema.controle.financas.pessoais.utils.Constantes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransacaoContaDaoImpl implements TransacaoContaDao {
+    private static final Logger logger = LoggerFactory.getLogger(TransacaoContaDaoImpl.class);
     public void inserirTransacao(TransacoesContaEntity transacao){
+        logger.debug(Constantes.DebugRegistroProcesso + transacao);
+
         String sql = "SELECT inserir_transacao(?,?,?,?,?,?,?)";
         try (Connection conn = DataSourceConfig.getConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -25,12 +31,15 @@ public class TransacaoContaDaoImpl implements TransacaoContaDao {
 
             ps.executeQuery();
 
+            logger.info(Constantes.InfoRegistrar + transacao);
         } catch (SQLException e){
-            e.printStackTrace();
+            logger.error(Constantes.ErroRegistrarNoServidor);
         }
     }
 
     public List<ExtratoEntity> obterExtratoPorMes(Integer idUsuario, int mes, int ano){
+        logger.debug(Constantes.DebugBuscarProcesso + idUsuario);
+
         String sql = "SELECT * FROM buscar_extrato_por_usuario(?,?,?)";
 
         List<ExtratoEntity> extratos = new ArrayList<>();
@@ -55,8 +64,9 @@ public class TransacaoContaDaoImpl implements TransacaoContaDao {
                 extratos.add(extrato);
             }
 
+            logger.info(Constantes.InfoBuscar + idUsuario);
         } catch (SQLException e){
-            e.printStackTrace();
+            logger.error(Constantes.ErroBuscarRegistroNoServidor);
         }
         return extratos;
     }

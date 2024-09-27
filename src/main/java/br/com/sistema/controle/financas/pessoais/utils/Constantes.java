@@ -12,8 +12,34 @@ public class Constantes {
     public static final String CadastroRealizadoUsuario = "Cadastrado realizado com sucesso! ";
     public static final String MensagemLoginUsuario = "Utilize o email e a senha definida no cadastro para logar na conta";
 
+    //Mensagens de erro do servidor
+
+    public static final String ErroServidor = "Erro ao tentar conectar ao servidor! Tente novamente mais tarde.";
+    public static final String ErroRegistrarNoServidor = "Erro ao registrar no servidor!";
+    public static final String ErroBuscarRegistroNoServidor = "Erro ao realizar buscar do registro no servidor!";
+    public static final String ErroEditarRegistroNoServidor = "Erro ao atualizar registro no servidor!";
+    public static final String ErroDeletarRegistroNoServidor = "Erro ao deletar registro no servidor!";
+
+    //Mensagens info logger
+
+    public static final String InfoRegistrar = "Dados '{}' salvos com sucesso, ";
+    public static final String InfoBuscar = "Dados '{}' recuperados com sucesso, ";
+    public static final String InfoEditar = "Dados '{}' atualizados no servidor com sucesso, ";
+    public static final String InfoDeletar = "Dados '{}' deletado do servidor com sucesso, ";
+
+
+
+
+    //Mensagem debug logger
+
+    public static final String DebugRegistroProcesso = "Tentando salvar dados: {}, ";
+    public static final String DebugBuscarProcesso = "Iniciando o processo de busca no servidor.";
+    public static final String DebugEditarProcesso = "Iniciando o processo de edição do registro no servidor.";
+    public static final String DebugDeletarProcesso = "Iniciando o processo de deletar registro no servidor.";
+
+
+
     //mensagens de erros
-    public static final String ErroServidor = "Erro ao tentar conectar ao servidor. Tente novamente mais tarde.";
 
     public static final String ErroCadastroUsuario = "Erro! Cadastrado não realizado!";
     public static final String EmailJaCadastrado = "Esse e-mail, já foi cadastrado!";

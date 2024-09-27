@@ -1,8 +1,8 @@
 package br.com.sistema.controle.financas.pessoais.service.usuario;
 
-import br.com.sistema.controle.financas.pessoais.dao.conta.Impl.SaldoDaoImpl;
+import br.com.sistema.controle.financas.pessoais.dao.conta.impl.SaldoDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.conta.SaldoDao;
-import br.com.sistema.controle.financas.pessoais.dao.usuario.Impl.UsuarioDaoImpl;
+import br.com.sistema.controle.financas.pessoais.dao.usuario.impl.UsuarioDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.usuario.UsuarioDao;
 import br.com.sistema.controle.financas.pessoais.exception.ServiceException;
 import br.com.sistema.controle.financas.pessoais.model.conta.SaldoEntity;

@@ -1,17 +1,23 @@
-package br.com.sistema.controle.financas.pessoais.dao.conta.Impl;
+package br.com.sistema.controle.financas.pessoais.dao.conta.impl;
 
 import br.com.sistema.controle.financas.pessoais.configuration.DataSourceConfig;
 import br.com.sistema.controle.financas.pessoais.dao.conta.ContaDao;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
+import br.com.sistema.controle.financas.pessoais.utils.Constantes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContaDaoImpl implements ContaDao {
+    private static final Logger logger = LoggerFactory.getLogger(ContaDaoImpl.class);
 
     public ContaEntity criarConta(ContaEntity conta){
-        String sql = "SElECT inserir_conta(?,?,?,?,?,?)";
+        logger.debug(Constantes.DebugRegistroProcesso + conta);
+
+        String sql = "SELECT inserir_conta(?,?,?,?,?,?)";
 
         try (Connection conn = DataSourceConfig.getConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -30,13 +36,16 @@ public class ContaDaoImpl implements ContaDao {
             }
             rs.close();
 
+            logger.info(Constantes.InfoRegistrar + conta);
         } catch (SQLException e){
-            e.printStackTrace();
+            logger.error(Constantes.ErroRegistrarNoServidor);
         }
         return conta;
     }
 
     public List<ContaEntity> obterContasPorUsuario(Integer idUsuario) {
+        logger.debug(Constantes.DebugBuscarProcesso + idUsuario);
+
         String sql = "SELECT * FROM buscar_contas_por_usuario(?)";
         List<ContaEntity> contas = new ArrayList<>();
 
@@ -58,14 +67,17 @@ public class ContaDaoImpl implements ContaDao {
             }
             rs.close();
 
+            logger.info(Constantes.InfoBuscar + idUsuario);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(Constantes.ErroBuscarRegistroNoServidor);
         }
         return contas;
     }
 
     public void editarConta(ContaEntity conta){
-        String sql = "SElECT atualizar_conta(?,?,?)";
+        logger.debug(Constantes.DebugEditarProcesso + conta);
+
+        String sql = "SELECT atualizar_conta(?,?,?)";
 
         try (Connection conn = DataSourceConfig.getConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -76,12 +88,15 @@ public class ContaDaoImpl implements ContaDao {
 
             ps.execute();
 
+            logger.info(Constantes.InfoEditar + conta);
         } catch (SQLException e){
-            e.printStackTrace();
+           logger.error(Constantes.ErroEditarRegistroNoServidor);
         }
     }
 
     public void excluirConta(Integer idConta){
+        logger.debug(Constantes.DebugDeletarProcesso + idConta);
+
         String sql = "SELECT excluir_conta(?)";
 
         try (Connection conn = DataSourceConfig.getConexao();
@@ -90,8 +105,9 @@ public class ContaDaoImpl implements ContaDao {
             ps.setInt(1, idConta);
             ps.executeQuery();
 
+            logger.info(Constantes.InfoDeletar + idConta);
         } catch (SQLException e){
-            e.printStackTrace();
+            logger.error(Constantes.ErroDeletarRegistroNoServidor);
         }
     }
 }

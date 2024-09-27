@@ -57,11 +57,11 @@ public class UsuarioService {
             boolean senhaValida = PasswordSecurity.checkSenha(senha, usuario.getSenhaUsuario());
 
             if (!senhaValida){
-                return null;
+                return usuario;
             }
             return usuario;
         } catch (Exception e){
-            return null;
+            throw new ServiceException(Constantes.erroLoginConta, e);
         }
     }
 }

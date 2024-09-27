@@ -13,6 +13,8 @@ public class Constantes {
     public static final String MensagemLoginUsuario = "Utilize o email e a senha definida no cadastro para logar na conta";
 
     //mensagens de erros
+    public static final String ErroServidor = "Erro ao tentar conectar ao servidor. Tente novamente mais tarde.";
+
     public static final String ErroCadastroUsuario = "Erro! Cadastrado não realizado!";
     public static final String EmailJaCadastrado = "Esse e-mail, já foi cadastrado!";
     public static final String ErroVerificarEmail = "O e-mail, não foi possivel ser verificado!";

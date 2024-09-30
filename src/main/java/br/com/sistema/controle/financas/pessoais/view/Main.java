@@ -1,7 +1,6 @@
 package br.com.sistema.controle.financas.pessoais.view;
 
 import br.com.sistema.controle.financas.pessoais.Enum.CategoriaEnum;
-import br.com.sistema.controle.financas.pessoais.dao.usuario.impl.UsuarioDaoImpl;
 import br.com.sistema.controle.financas.pessoais.facade.FacadeService;
 import br.com.sistema.controle.financas.pessoais.model.conta.ContaEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
@@ -34,7 +33,7 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
-        logger.info("Aplicação iniciada");
+        logger.debug(Constantes.DebugRegistroProcesso);
 
         while (true) {
             System.out.println(Constantes.bemVindo);
@@ -65,7 +64,7 @@ public class Main {
     }
 
     public static void realizarLogin(Scanner input){
-        logger.info("Aplicação iniciada");
+        logger.debug(Constantes.DebugRegistroProcesso);
         while (true){
             System.out.println("----LOGIN----\n");
 
@@ -88,6 +87,7 @@ public class Main {
     }
 
     public static void usuarioLogado(Scanner input, Integer idUsuario) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         while (true) {
             Double saldoAtual = facadeService.obterSaldoTotal(idUsuario);
             System.out.println("\nSEU SALDO TOTAL R$: " + saldoAtual);
@@ -141,6 +141,7 @@ public class Main {
     }
 
     public static void cadastrarNovoUsuario(Scanner input) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         UsuarioEntity novoUsuario = new UsuarioEntity();
 
         do {
@@ -195,6 +196,7 @@ public class Main {
     }
 
     private static void preencherSenha(Scanner input, UsuarioEntity novoUsuario) {
+        logger.debug(Constantes.DebugRegistroProcesso);
 
         String senha1;
         do {
@@ -225,6 +227,7 @@ public class Main {
     private static String validarPrenchimentoEntrada(Scanner input,
                                                      String mensagemDeEntrada,
                                                      String mesagemDeErro) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         while (true) {
             System.out.println(mensagemDeEntrada);
             String valor = input.nextLine();
@@ -238,6 +241,7 @@ public class Main {
     }
 
     public static void cadastrarConta(Scanner input, Integer idUsuario, Integer idSaldo) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         while (true){
             ContaEntity novaConta = new ContaEntity();
 
@@ -246,7 +250,7 @@ public class Main {
                         "Digite o Nome do Banco",
                         "Nome não preenchido");
                 if (!ValidarNome.validarNome(nomeConta)){
-                    System.err.println(Constantes.cadastroNomeConta);
+                    logger.error(Constantes.cadastroNomeConta);
                     continue;
                 }
                 novaConta.setNomeConta(nomeConta);
@@ -258,7 +262,7 @@ public class Main {
                         "Digite seu saldo atual",
                         "Saldo não preenchido");
                 if (!FuncoesUtil.ehNumero(saldo)){
-                    System.err.println(Constantes.cadastroSaldo);
+                    logger.error(Constantes.cadastroSaldo);
                     continue;
                 }
                 novaConta.setSaldoConta(Double.parseDouble(saldo));
@@ -268,7 +272,7 @@ public class Main {
             // Carregar e exibir tipos de contas a partir do banco de dados
             List<String> tiposConta = facadeService.obterTiposConta();
             if (tiposConta.isEmpty()) {
-                System.err.println("Nenhum tipo de conta encontrado!");
+                logger.error("Nenhum tipo de conta encontrado!");
                 return;
             }
 
@@ -284,11 +288,11 @@ public class Main {
                         "Selecione o tipo de conta:",
                         "Numero não escolhido");
                 if (!FuncoesUtil.ehNumero(escolhaStr)) {
-                    System.out.println("Opção inválida! Digite um número válido.");
+                    logger.error("Opção inválida! Digite um número válido.");
                 } else {
                     escolhaTipo = Integer.parseInt(escolhaStr);
                     if (escolhaTipo < 1 || escolhaTipo > tiposConta.size()) {
-                        System.err.println("Opção inválida.");
+                        logger.error("Opção inválida.");
                     } else {
                         novaConta.setTipoConta(tiposConta.get(escolhaTipo - 1));
                         break;
@@ -310,11 +314,12 @@ public class Main {
     }
 
     public static void registrarTransacao(Scanner input, Integer idUsuario) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         while (true){
             List<ContaEntity> contas = facadeService.obterContasPorUsuario(idUsuario);
 
             if (contas.isEmpty()) {
-                System.err.println(Constantes.contaNaoEncontrada);
+                logger.error(Constantes.contaNaoEncontrada);
                 return;
             }
 
@@ -335,7 +340,7 @@ public class Main {
                 System.out.println("Digite o valor da transação:");
                 String valorStr = input.nextLine().trim();
                 if (!FuncoesUtil.ehNumero(valorStr)){
-                    System.out.println("Digite so numeros.");
+                    logger.error("Digite so numeros.");
                 } else {
                     valor = Double.parseDouble(valorStr);
                     break;
@@ -348,11 +353,11 @@ public class Main {
                 String tipoStr = input.nextLine().trim();
 
                 if(!FuncoesUtil.ehNumero(tipoStr)){
-                    System.out.println(Constantes.tipoTransacao);
+                    logger.error(Constantes.tipoTransacao);
                 } else {
                     tipo = Integer.parseInt(tipoStr);
                     if (tipo !=1 && tipo != 2){
-                        System.err.println(Constantes.tipoTransacao);
+                        logger.error(Constantes.tipoTransacao);
                         return;
                     } else {
                         break;
@@ -371,6 +376,7 @@ public class Main {
     }
 
     public static CategoriaEnum escolhaCategoria(Scanner input){
+        logger.debug(Constantes.DebugRegistroProcesso);
         CategoriaEnum[] categoriaEnums = CategoriaEnum.values();
 
         System.out.println("Escolha uma categoria:");
@@ -397,6 +403,7 @@ public class Main {
 
     // Método para exibir as contas
     private static void exibirContas(List<ContaEntity> contas) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         System.out.println("Selecione a conta para realizar a transação:");
         for (int i = 0; i < contas.size(); i++) {
             ContaEntity conta = contas.get(i);
@@ -408,6 +415,7 @@ public class Main {
 
     // Método para capturar a escolha da conta
     private static ContaEntity escolherConta(Scanner input, List<ContaEntity> contas) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         int escolha;
         while (true) {
             System.out.println("\nSelecione a conta:");
@@ -429,6 +437,7 @@ public class Main {
     }
 
     private static void mostrarExtrato(Scanner input, Integer idUsuario) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         while (true) {
             int[] mesAno = obterMesAno(input);
             int mes = mesAno[0];
@@ -455,6 +464,7 @@ public class Main {
     }
 
     private static int[] obterMesAno(Scanner input) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         LocalDate hoje = LocalDate.now();
         int mes = hoje.getMonthValue();
         int ano = hoje.getYear();
@@ -478,6 +488,7 @@ public class Main {
     private static TotaisGanhosGastosEntity calcularGanhosGastos(List<ExtratoEntity> extratos,
                                                                  Map<String, Double> ganhosPorCategoria,
                                                                  Map<String, Double> gastosPorCategoria){
+        logger.debug(Constantes.DebugRegistroProcesso);
 
         double totalGanhos = 0;
         double totalGastos = 0;
@@ -507,6 +518,7 @@ public class Main {
 
     private static void exibirExtratoFinal(double totalGanhos, double totalGastos, Map<String, Double> ganhosPorCategoria,
                                            Map<String, Double> gastosPorCategoria) {
+        logger.debug(Constantes.DebugRegistroProcesso);
         System.out.printf("Ganhos: R$ %.2f | Gastos: R$ %.2f\n", totalGanhos, totalGastos);
 
         if (totalGanhos > 0) {
@@ -542,6 +554,7 @@ public class Main {
     }
 
     private static void minhasContas(Scanner input, Integer idUsuario){
+        logger.debug(Constantes.DebugRegistroProcesso);
         while (true){
             List<ContaEntity> contas = facadeService.obterContasPorUsuario(idUsuario);
 
@@ -596,9 +609,9 @@ public class Main {
     }
 
     private static void editarConta(Scanner input, ContaEntity contaSelecionada) {
-        System.out.println("Editar Conta:");
+        logger.debug(Constantes.DebugRegistroProcesso);
 
-        // Nome da conta
+        System.out.println("Editar Conta:");
         System.out.println("Nome atual: " + contaSelecionada.getNomeConta());
         System.out.println("Digite o novo nome da conta (ou aperte Enter para manter o nome atual):");
         String novoNome = input.nextLine();

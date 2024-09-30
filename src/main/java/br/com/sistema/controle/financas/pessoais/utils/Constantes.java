@@ -32,7 +32,7 @@ public class Constantes {
 
     //Mensagem debug logger
 
-    public static final String DebugRegistroProcesso = "Tentando salvar dados: {}, ";
+    public static final String DebugRegistroProcesso = "Aplicação iniciada. ";
     public static final String DebugBuscarProcesso = "Iniciando o processo de busca no servidor.";
     public static final String DebugEditarProcesso = "Iniciando o processo de edição do registro no servidor.";
     public static final String DebugDeletarProcesso = "Iniciando o processo de deletar registro no servidor.";

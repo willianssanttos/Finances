@@ -28,10 +28,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
-
-    private static final Logger logger = LoggerFactory.getLogger(UsuarioDaoImpl.class);
-
     static FacadeService facadeService = FacadeService.getInstance();
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
 
@@ -46,7 +44,7 @@ public class Main {
 
             String escolhaOpcao = input.nextLine();
             if (!FuncoesUtil.ehNumero(escolhaOpcao)) {
-                System.err.println(Constantes.OpcaoInvalida);
+                logger.error(Constantes.OpcaoInvalida);
                 continue;
             }
             int escolha = Integer.parseInt(escolhaOpcao);
@@ -61,12 +59,13 @@ public class Main {
                 case 3:
                     return;
                 default:
-                    System.err.println(Constantes.OpcaoInvalida);
+                    logger.error(Constantes.OpcaoInvalida);
             }
         }
     }
 
     public static void realizarLogin(Scanner input){
+        logger.info("Aplicação iniciada");
         while (true){
             System.out.println("----LOGIN----\n");
 
@@ -79,9 +78,9 @@ public class Main {
             UsuarioEntity usuario = facadeService.autenticarUsuario(email, senha);
 
             if (usuario == null){
-                System.err.println(Constantes.erroLoginConta);
+                logger.error(Constantes.erroLoginConta);
             } else {
-                System.out.println(Constantes.loginConta);
+                logger.info(Constantes.loginConta);
                 usuarioLogado(input, usuario.getIdUsuario());
                 break;
             }
@@ -98,7 +97,7 @@ public class Main {
             List<ContaEntity> contas = facadeService.obterContasPorUsuario(idUsuario);
 
             if (contas == null){
-                System.out.println(Constantes.criarConta);
+                logger.info(Constantes.criarConta);
                 continue;
             }
 
@@ -115,7 +114,7 @@ public class Main {
 
             String logadoUsuario = input.nextLine();
             if (!FuncoesUtil.ehNumero(logadoUsuario)) {
-                System.err.println(Constantes.OpcaoInvalida);
+                logger.error(Constantes.OpcaoInvalida);
                 continue;
             }
             int opcaoEscolha = Integer.parseInt(logadoUsuario);
@@ -136,7 +135,7 @@ public class Main {
                 case 5:
                     return;
                 default:
-                    System.out.println(Constantes.OpcaoInvalida);
+                    logger.error(Constantes.OpcaoInvalida);
             }
         }
     }
@@ -190,8 +189,8 @@ public class Main {
         } while (true);
 
         facadeService.criarUsuario(novoUsuario);
-        System.out.println(Constantes.CadastroRealizadoUsuario);
-        System.out.println(Constantes.MensagemLoginUsuario);
+        logger.info(Constantes.CadastroRealizadoUsuario);
+        logger.info(Constantes.MensagemLoginUsuario);
 
     }
 
@@ -302,7 +301,7 @@ public class Main {
             novaConta.setDataDeposito(Timestamp.valueOf(LocalDateTime.now()));
 
             facadeService.criarConta(novaConta);
-            System.out.println(Constantes.cadastroConta);
+            logger.info(Constantes.cadastroConta);
 
             if (!desejaSair(input)) {
                 break;
@@ -363,7 +362,7 @@ public class Main {
 
             facadeService.realizarTransacao(contaSelecionada.getIdConta(), contaSelecionada.getIdSaldo(),
                                             descricao, categoriaSelecionada.name(), valor, tipo);
-            System.out.println(Constantes.cadastroTransacao);
+            logger.info(Constantes.cadastroTransacao);
 
             if (!desejaSair(input)) {
                 break;
@@ -388,10 +387,10 @@ public class Main {
                 if (escolha > 0 && escolha <= categoriaEnums.length){
                     return categoriaEnums[escolha - 1];
                 } else {
-                    System.err.println("Escolha invalida. Tente novamente.");
+                    logger.error("Escolha invalida. Tente novamente.");
                 }
             } else {
-                System.err.println("Digite apenas números.");
+                logger.error("Digite apenas números.");
             }
         }
     }
@@ -463,7 +462,7 @@ public class Main {
         System.out.println("\nDeseja filtrar por uma data? (s/n)");
         String resposta = input.nextLine();
         while (!resposta.equals("s") && !resposta.equals("n")) {
-            System.out.println("Opção invalida! Digite 's' para filtrar ou 'n' para mostrar o extrato completo");
+            logger.error("Opção invalida! Digite 's' para filtrar ou 'n' para mostrar o extrato completo");
             resposta = input.nextLine().trim().toLowerCase();
         }
 
@@ -537,7 +536,7 @@ public class Main {
             } else if (saida.equals("n")) {
                 return true;
             } else {
-                System.out.println(Constantes.erroSN);
+                logger.error(Constantes.erroSN);
             }
         }
     }
@@ -547,7 +546,7 @@ public class Main {
             List<ContaEntity> contas = facadeService.obterContasPorUsuario(idUsuario);
 
             if (contas.isEmpty()){
-                System.out.println("Nenhuma conta encontrada!");
+                logger.error("Nenhuma conta encontrada!");
                 return;
             }
 
@@ -565,7 +564,7 @@ public class Main {
 
             String escolhaOpcao = input.nextLine();
             if (!FuncoesUtil.ehNumero(escolhaOpcao)) {
-                System.err.println(Constantes.OpcaoInvalida);
+                logger.error(Constantes.OpcaoInvalida);
                 continue;
             }
             int opcao = Integer.parseInt(escolhaOpcao);
@@ -591,7 +590,7 @@ public class Main {
                 case 3:
                     return;
                 default:
-                    System.out.println(Constantes.OpcaoInvalida);
+                    logger.error(Constantes.OpcaoInvalida);
             }
         }
     }
@@ -604,7 +603,7 @@ public class Main {
         System.out.println("Digite o novo nome da conta (ou aperte Enter para manter o nome atual):");
         String novoNome = input.nextLine();
         if (!ValidarNome.validarNome(novoNome)){
-            System.err.println("Nome inválido! Nome não e permitido com números.");
+            logger.error("Nome inválido! Nome não e permitido com números.");
         } else if (!novoNome.isBlank()) {
             contaSelecionada.setNomeConta(novoNome);
         }
@@ -616,7 +615,7 @@ public class Main {
         // Carregar e exibir tipos de contas a partir do banco de dados
         List<String> tiposConta = facadeService.obterTiposConta();
         if (tiposConta.isEmpty()) {
-            System.err.println("Nenhum tipo de conta encontrado!");
+            logger.error("Nenhum tipo de conta encontrado!");
             return;
         }
 
@@ -633,15 +632,15 @@ public class Main {
                 if (escolhaTipo >= 1 && escolhaTipo <= tiposConta.size()) {
                     contaSelecionada.setTipoConta(tiposConta.get(escolhaTipo - 1));
                 } else {
-                    System.err.println("Opção inválida. Mantendo o tipo de conta atual.");
+                    logger.error("Opção inválida. Mantendo o tipo de conta atual.");
                 }
             } else {
-                System.err.println("Opção inválida! Mantendo o tipo de conta atual.");
+                logger.error("Opção inválida! Mantendo o tipo de conta atual.");
             }
         }
 
         // Chama o serviço para editar a conta
         facadeService.editarConta(contaSelecionada);
-        System.out.println(Constantes.ContaEditada);
+        logger.info(Constantes.ContaEditada);
     }
 }

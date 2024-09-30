@@ -2,10 +2,11 @@ package br.com.sistema.controle.financas.pessoais.service.conta;
 
 import br.com.sistema.controle.financas.pessoais.dao.conta.impl.TransacaoContaDaoImpl;
 import br.com.sistema.controle.financas.pessoais.dao.conta.TransacaoContaDao;
-import br.com.sistema.controle.financas.pessoais.exception.ServiceException;
 import br.com.sistema.controle.financas.pessoais.model.conta.ExtratoEntity;
 import br.com.sistema.controle.financas.pessoais.model.conta.TransacoesContaEntity;
 import br.com.sistema.controle.financas.pessoais.utils.Constantes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -16,11 +17,11 @@ public class TransacaoService {
     public TransacaoService(){
         this.transacaoContaDao = new TransacaoContaDaoImpl();
     }
-
+    private static final Logger logger = LoggerFactory.getLogger(TransacaoService.class);
     public void registrarTransacao(Integer idConta, Integer idSaldo, String descricao, String categoria, Double valor, int tipo){
            try {
                if (tipo != 1 && tipo != 2){
-                   throw new IllegalArgumentException(Constantes.tipoTransacao);
+                   logger.error(Constantes.tipoTransacao);
                }
 
                TransacoesContaEntity novaTransacao = new TransacoesContaEntity();
@@ -34,7 +35,7 @@ public class TransacaoService {
 
                transacaoContaDao.inserirTransacao(novaTransacao);
            } catch (Exception e){
-               throw new ServiceException(Constantes.ErrocadastroTransacao, e);
+               logger.error(Constantes.ErrocadastroTransacao);
            }
     }
 
@@ -42,7 +43,8 @@ public class TransacaoService {
         try {
             return transacaoContaDao.obterExtratoPorMes(idUsuario, mes, ano);
         } catch (Exception e){
-            throw new ServiceException(Constantes.ErrorRecuperarExtrato, e);
+            logger.error(Constantes.ErrorRecuperarExtrato);
         }
+        return obterExtratoPorMes(idUsuario, mes, ano);
     }
 }

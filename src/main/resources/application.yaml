@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ControleFinanceiro
+    username: postgres
+    password: 123456
+  application:
+    name: Aplicacao REST de uma plataforma finances
+#    projeto.jwtSecret: bxOksa8BHgdAhR80Y3pEYvS5M+MnF2sheFDqprkTqQ4odqoszJLW1ikw64/nT/dTvlgrcBTq7HfK1B9Gai2h5A==
+#    projeto.jwtExpirationMs: 900000
+  springdoc:
+    api-docs:
+      path: /v3/api-docs
+    swagger-ui:
+      path: /swagger-ui.html
+server:
+  port: '27031'
+
+
+
